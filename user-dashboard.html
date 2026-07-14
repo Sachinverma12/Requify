@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Dashboard - Requify</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <style>
+    .dashboard-section { padding: 2rem 0; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+
+    .toolbar { display: flex; gap: 0.75rem; align-items: center; }
+    .toolbar input { flex: 1; }
+
+    .table-like { background: rgba(255,255,255,0.92); border: 1px solid rgba(44,90,160,0.12); border-radius: 15px; padding: 1.25rem; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; }
+    .card { background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.08); }
+    .card .img { height: 170px; background-size: cover; background-position: center; position: relative; }
+    .card .img:after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent, rgba(0,0,0,0.45)); }
+    .card .badge { position: absolute; bottom: 12px; right: 12px; z-index: 2; background: #62a7c7; color: #fff; padding: 0.3rem 0.65rem; border-radius: 999px; font-weight: 700; font-size: 0.9rem; }
+    .card .content { padding: 1rem 1.1rem; }
+    .meta { display: flex; gap: 0.75rem; flex-wrap: wrap; color: #666; margin-top: 0.5rem; }
+    .meta span { display: inline-flex; align-items: center; gap: 0.4rem; }
+    .small-muted { color: #777; font-size: 0.95rem; }
+    .empty { padding: 1.25rem; color: #666; }
+
+    .btn-row { display:flex; gap:0.75rem; align-items:center; }
+    .ghost-btn { background: transparent; border: 1px solid rgba(44,90,160,0.35); color: #2c5aa0; padding: 0.8rem 1rem; border-radius: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; }
+    .ghost-btn:hover { transform: translateY(-1px); background: rgba(44,90,160,0.06); }
+  </style>
+</head>
+<body>
+  <header id="header">
+    <nav class="container">
+      <h1 class="logo">Requify</h1>
+      <div style="display:flex; gap:12px; align-items:center;">
+        <button id="logoutBtnTop" class="cta-btn" style="border:none; cursor:pointer;">Logout</button>
+      </div>
+    </nav>
+  </header>
+
+  <main style="padding-top: 8rem;">
+    <section class="dashboard-section">
+      <div class="container">
+        <div class="auth-card" style="margin-bottom: 1.5rem;">
+          <h2 class="auth-title">User Dashboard</h2>
+          <p class="auth-subtitle">Welcome, <span id="userName"></span>!</p>
+          <div id="protectedResult" class="auth-message" role="status"></div>
+        </div>
+
+        <div class="table-like">
+          <div class="two-col">
+            <div>
+              <h3 style="color:#2c5aa0; margin-bottom: 0.75rem;">Search Properties</h3>
+              <div class="toolbar">
+                <input id="searchInput" type="text" placeholder="Search by title, location, category..." />
+                <button id="searchBtn" class="submit-btn" type="button" style="width:auto; padding: 0.85rem 1.15rem;">Search</button>
+              </div>
+              <div class="small-muted" style="margin-top:0.75rem;">
+                Tip: Try “Mumbai”, “villa”, “penthouse”, etc.
+              </div>
+            </div>
+
+            <div>
+              <div style="display:flex; justify-content: space-between; align-items: flex-start; gap: 1rem;">
+                <div>
+                  <h3 style="color:#2c5aa0; margin-bottom: 0.75rem;">Results</h3>
+                  <div id="resultsCount" class="small-muted">0 properties</div>
+                </div>
+                <button id="clearBtn" class="ghost-btn" type="button">
+                  <i class="fas fa-eraser"></i> Clear
+                </button>
+              </div>
+              <div id="propertiesEmpty" class="empty" style="display:none;">
+                No properties found.
+              </div>
+            </div>
+          </div>
+
+          <div id="propertiesGrid" class="cards" style="margin-top: 1.25rem;"></div>
+        </div>
+
+        <div class="auth-footer" style="margin-top: 1.25rem;">
+          <a href="./index.html">Back to Home</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./auth.js"></script>
+  <script>
+    const logoutBtn = document.getElementById('logoutBtnTop');
+    logoutBtn.addEventListener('click', () => {
+      clearSession();
+      window.location.href = './login.html';
+    });
+
+    const propertiesGrid = document.getElementById('propertiesGrid');
+    const propertiesEmpty = document.getElementById('propertiesEmpty');
+    const resultsCount = document.getElementById('resultsCount');
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '<')
+        .replaceAll('>', '>')
+        .replaceAll('"', '"')
+        .replaceAll("'", '&#039;');
+    }
+
+    function renderProperties(properties) {
+      propertiesGrid.innerHTML = '';
+
+      const list = properties || [];
+      resultsCount.textContent = `${list.length} ${list.length === 1 ? 'property' : 'properties'}`;
+
+      propertiesEmpty.style.display = list.length ? 'none' : 'block';
+
+      list.forEach((p) => {
+        const priceText = p.price ? `$${p.price}`.startsWith('$$') ? `${p.price}` : `$${p.price}` : 'Price N/A';
+        const imgUrl = p.imageUrl && p.imageUrl.trim().length ? p.imageUrl.trim() : 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80';
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="img" style="background-image:url('${escapeHtml(imgUrl)}');">
+            ${p.price ? `<div class="badge">${escapeHtml(priceText)}</div>` : ''}
+          </div>
+          <div class="content">
+            <h3 style="color:#333; font-size:1.25rem; margin-bottom:0.35rem;">${escapeHtml(p.title)}</h3>
+            <div class="small-muted">${escapeHtml(p.category || 'Property')}</div>
+            <div class="meta">
+              <span><i class="fas fa-map-marker-alt"></i> ${escapeHtml(p.location || '')}</span>
+              <span><i class="fas fa-clock"></i> ${escapeHtml(new Date(p.updatedAt || p.createdAt || Date.now()).toLocaleDateString())}</span>
+            </div>
+            ${p.description ? `<p class="small-muted" style="margin-top:0.75rem;">${escapeHtml(p.description).slice(0,120)}${String(p.description).length>120?'...':''}</p>` : ''}
+          </div>
+        `;
+        propertiesGrid.appendChild(card);
+      });
+    }
+
+    async function loadProperties(search = '') {
+      const token = getSessionToken();
+      const url = `http://localhost:5000/api/properties${search ? `?search=${encodeURIComponent(search)}` : ''}`;
+      const res = await apiGet(url, token);
+      renderProperties(res.properties || []);
+    }
+
+    (async () => {
+      const token = getSessionToken();
+      if (!token) return window.location.href = './login.html';
+
+      try {
+        const me = await apiGet('http://localhost:5000/api/auth/me', token);
+        document.getElementById('userName').textContent = me.user.name;
+
+        const protectedData = await apiGet('http://localhost:5000/api/protected/user', token);
+        document.getElementById('protectedResult').textContent = protectedData.message;
+
+        await loadProperties('');
+      } catch (e) {
+        clearSession();
+        window.location.href = './login.html';
+      }
+    })();
+
+    document.getElementById('searchBtn').addEventListener('click', async () => {
+      const q = document.getElementById('searchInput').value;
+      await loadProperties(q);
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', async () => {
+      document.getElementById('searchInput').value = '';
+      await loadProperties('');
+    });
+
+    document.getElementById('searchInput').addEventListener('keydown', async (e) => {
+      if (e.key === 'Enter') {
+        const q = document.getElementById('searchInput').value;
+        await loadProperties(q);
+      }
+    });
+  </script>
+</body>
+</html>
+

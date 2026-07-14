@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Requify</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+</head>
+<body>
+  <header id="header">
+    <nav class="container">
+      <h1 class="logo">Requify</h1>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="./index.html#Home">Home</a></li>
+      </ul>
+      <a href="./signup.html" class="cta-btn">Sign Up</a>
+      <div class="mobile-menu-btn" id="mobileMenuBtn">
+        <span></span><span></span><span></span>
+      </div>
+    </nav>
+  </header>
+
+  <main style="padding-top: 8rem;">
+    <section class="auth-section">
+      <div class="container">
+        <div class="auth-card">
+          <h2 class="auth-title">Login</h2>
+          <p class="auth-subtitle">Choose your role and login to access your dashboard.</p>
+
+          <div class="role-pills" role="group" aria-label="Role">
+            <input type="radio" name="role" id="role-user" value="user" checked />
+            <label for="role-user">User</label>
+
+            <input type="radio" name="role" id="role-owner" value="owner" />
+            <label for="role-owner">Owner</label>
+
+            <input type="radio" name="role" id="role-admin" value="admin" />
+            <label for="role-admin">Admin</label>
+          </div>
+
+          <form id="loginForm" class="auth-form" autocomplete="off">
+            <div class="form-group">
+              <label for="loginEmail">Email</label>
+              <input type="email" id="loginEmail" name="email" required />
+            </div>
+
+            <div class="form-group">
+              <label for="loginPassword">Password</label>
+              <input type="password" id="loginPassword" name="password" required minlength="8" />
+            </div>
+
+            <div id="authMessage" class="auth-message" role="status"></div>
+
+            <button class="submit-btn" type="submit">Login</button>
+          </form>
+
+          <div class="auth-footer">
+            <a href="./signup.html">New here? Create account</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./auth.js"></script>
+  <script>
+    const loginForm = document.getElementById('loginForm');
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const role = document.querySelector('input[name="role"]:checked')?.value;
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        renderToast('Logging in...', false);
+        const data = await apiPost('http://localhost:5000/api/auth/login', { email, password, role });
+        setSession(data.token);
+        window.location.href = role === 'owner'
+          ? './owner-dashboard.html'
+          : role === 'admin'
+            ? './admin-dashboard.html'
+            : './user-dashboard.html';
+      } catch (err) {
+        renderToast(err.message, true);
+      }
+    });
+  </script>
+</body>
+</html>
+

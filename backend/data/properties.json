@@ -1,0 +1,16 @@
+{
+  "properties": [
+    {
+      "id": "5b6988610c83421a237e76d4c42e8f49",
+      "ownerId": "777c1e09a8008af7b71083e739de32e3",
+      "title": "My Villa 3",
+      "location": "Mumbai",
+      "price": "850000",
+      "category": "Villa",
+      "description": "Nice",
+      "imageUrl": "",
+      "createdAt": "2026-07-13T17:11:42.937Z",
+      "updatedAt": "2026-07-13T17:11:42.937Z"
+    }
+  ]
+}

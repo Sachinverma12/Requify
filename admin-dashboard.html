@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - Requify</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <style>
+    .dashboard-section { padding: 2rem 0; }
+    .grid-2 { display:grid; grid-template-columns: 1fr 1fr; gap:2rem; }
+    @media (max-width: 1100px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    .table-like { background: rgba(255,255,255,0.92); border: 1px solid rgba(44,90,160,0.12); border-radius: 15px; padding: 1.25rem; }
+
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; }
+    .card { background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.08); }
+    .card .img { height: 160px; background-size: cover; background-position: center; position: relative; }
+    .card .img:after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent, rgba(0,0,0,0.45)); }
+    .card .badge { position: absolute; bottom: 12px; right: 12px; z-index: 2; background: #62a7c7; color: #fff; padding: 0.3rem 0.65rem; border-radius: 999px; font-weight: 700; font-size: 0.9rem; }
+    .card .content { padding: 1rem 1.1rem; }
+    .meta { display: flex; gap: 0.75rem; flex-wrap: wrap; color: #666; margin-top: 0.5rem; }
+
+    .btn { border: none; padding: 0.85rem 1.15rem; border-radius: 10px; font-weight: 800; cursor: pointer; transition: all 0.2s ease; }
+    .btn-primary { background: #2c5aa0; color: #fff; }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 25px rgba(44,90,160,0.25); }
+    .btn-ghost { background: transparent; border: 1px solid rgba(44,90,160,0.35); color: #2c5aa0; }
+    .btn-ghost:hover { transform: translateY(-1px); background: rgba(44,90,160,0.06); }
+    .btn-danger { background: #b00020; color: #fff; }
+    .btn-danger:hover { transform: translateY(-1px); box-shadow: 0 10px 25px rgba(176,0,32,0.18); }
+
+    .list { display:grid; gap:0.65rem; }
+    .list-item { padding: 0.95rem 1rem; border: 1px solid rgba(44,90,160,0.12); border-radius: 12px; background: rgba(255,255,255,0.85); }
+    .list-item .row { display:flex; justify-content: space-between; gap:1rem; flex-wrap: wrap; }
+    .pill { display:inline-flex; align-items:center; gap:0.35rem; padding:0.25rem 0.55rem; border-radius:999px; background: rgba(44,90,160,0.08); color:#2c5aa0; font-weight:800; font-size:0.9rem; }
+
+    .field { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 900px) { .field { grid-template-columns: 1fr; } }
+    .form-group { margin-bottom: 0.95rem; }
+    .form-group label { display:block; margin-bottom: 0.45rem; font-weight: 700; color:#2c5aa0; }
+    .form-group input, .form-group textarea { width: 100%; padding: 0.85rem; border: 2px solid #e9ecef; border-radius: 10px; font-size: 1rem; }
+
+    .form-actions { display:flex; gap:0.75rem; flex-wrap: wrap; }
+    .muted { color:#777; font-size:0.95rem; }
+
+    .inline-actions { display:flex; gap:0.55rem; flex-wrap: wrap; margin-top: 0.85rem; }
+  </style>
+</head>
+<body>
+  <header id="header">
+    <nav class="container">
+      <h1 class="logo">Requify</h1>
+      <div style="display:flex; gap:12px; align-items:center;">
+        <button id="logoutBtnTop" class="cta-btn" style="border:none; cursor:pointer;">Logout</button>
+      </div>
+    </nav>
+  </header>
+
+  <main style="padding-top: 8rem;">
+    <section class="dashboard-section">
+      <div class="container">
+        <div class="auth-card" style="margin-bottom: 1.5rem;">
+          <h2 class="auth-title">Admin Dashboard</h2>
+          <p class="auth-subtitle">Welcome, <span id="userName"></span>!</p>
+          <div id="protectedResult" class="auth-message" role="status"></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="table-like">
+            <h3 style="color:#2c5aa0; margin-bottom:0.75rem;">All Users / Owners</h3>
+            <div class="muted" style="margin-bottom:0.75rem;" id="userCount">0 users</div>
+            <div class="list" id="usersList"></div>
+          </div>
+
+          <div class="table-like">
+            <h3 style="color:#2c5aa0; margin-bottom:0.75rem;">Property Manager</h3>
+            <div class="muted" style="margin-bottom:0.95rem;">Edit or delete any property listing. (All actions are admin-only.)</div>
+
+            <form id="adminPropertyForm">
+              <input type="hidden" id="editingId" value="" />
+              <div class="field">
+                <div class="form-group">
+                  <label for="title">Title</label>
+                  <input id="title" type="text" required minlength="2" />
+                </div>
+                <div class="form-group">
+                  <label for="category">Category</label>
+                  <input id="category" type="text" placeholder="e.g. Villa, Apartment" />
+                </div>
+              </div>
+              <div class="field">
+                <div class="form-group">
+                  <label for="location">Location</label>
+                  <input id="location" type="text" required minlength="2" />
+                </div>
+                <div class="form-group">
+                  <label for="price">Price</label>
+                  <input id="price" type="text" placeholder="e.g. 850000" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="imageUrl">Image URL</label>
+                <input id="imageUrl" type="text" placeholder="Optional" />
+              </div>
+              <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" rows="4" placeholder="Optional"></textarea>
+              </div>
+
+              <div class="form-actions">
+                <button class="btn btn-primary" type="submit" id="saveBtn">Save Changes</button>
+                <button class="btn btn-ghost" type="button" id="cancelEditBtn" style="display:none;">Cancel Edit</button>
+              </div>
+            </form>
+
+            <div class="muted" style="margin-top:1rem;">
+              Tip: Click “Edit” on a property card to load it into this form.
+            </div>
+          </div>
+        </div>
+
+        <div class="table-like" style="margin-top: 1.5rem;">
+          <div style="display:flex; justify-content: space-between; align-items: baseline; gap:1rem; flex-wrap: wrap;">
+            <h3 style="color:#2c5aa0; margin:0.25rem 0 0.75rem;">All Properties</h3>
+            <div class="muted" id="propertiesCount">0 properties</div>
+          </div>
+
+          <div id="propertiesEmpty" class="empty" style="display:none; color:#666;">No properties yet.</div>
+          <div id="propertiesGrid" class="cards" style="margin-top:0.25rem;"></div>
+        </div>
+
+        <div class="auth-footer" style="margin-top: 1.25rem;">
+          <a href="./index.html">Back to Home</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./auth.js"></script>
+  <script>
+    const logoutBtn = document.getElementById('logoutBtnTop');
+    logoutBtn.addEventListener('click', () => {
+      clearSession();
+      window.location.href = './login.html';
+    });
+
+    const usersList = document.getElementById('usersList');
+    const userCount = document.getElementById('userCount');
+
+    const propertiesGrid = document.getElementById('propertiesGrid');
+    const propertiesEmpty = document.getElementById('propertiesEmpty');
+    const propertiesCount = document.getElementById('propertiesCount');
+
+    const protectedResult = document.getElementById('protectedResult');
+    const usersForm = document.getElementById('adminPropertyForm');
+
+    const editingId = document.getElementById('editingId');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+
+    const fields = {
+      title: document.getElementById('title'),
+      category: document.getElementById('category'),
+      location: document.getElementById('location'),
+      price: document.getElementById('price'),
+      imageUrl: document.getElementById('imageUrl'),
+      description: document.getElementById('description'),
+    };
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '<')
+        .replaceAll('>', '>')
+        .replaceAll('"', '"')
+        .replaceAll("'", '&#039;');
+    }
+
+    function setFormValues(p) {
+      editingId.value = p.id;
+      fields.title.value = p.title || '';
+      fields.category.value = p.category || '';
+      fields.location.value = p.location || '';
+      fields.price.value = p.price ?? '';
+      fields.imageUrl.value = p.imageUrl || '';
+      fields.description.value = p.description || '';
+      cancelEditBtn.style.display = 'inline-block';
+    }
+
+    function resetForm() {
+      editingId.value = '';
+      usersForm.reset();
+      cancelEditBtn.style.display = 'none';
+    }
+
+    cancelEditBtn.addEventListener('click', resetForm);
+
+    function getPayload() {
+      return {
+        title: fields.title.value,
+        category: fields.category.value,
+        location: fields.location.value,
+        price: fields.price.value,
+        imageUrl: fields.imageUrl.value,
+        description: fields.description.value,
+      };
+    }
+
+    async function loadUsers() {
+      const token = getSessionToken();
+      const res = await apiGet('http://localhost:5000/api/admin/users', token);
+      const list = res.users || [];
+
+      userCount.textContent = `${list.length} users`;
+      usersList.innerHTML = '';
+
+      list.forEach((u) => {
+        const div = document.createElement('div');
+        div.className = 'list-item';
+        div.innerHTML = `
+          <div class="row">
+            <div>
+              <div style="font-weight:900; color:#2c5aa0;">${escapeHtml(u.name)}</div>
+              <div class="muted">${escapeHtml(u.email)}</div>
+            </div>
+            <div class="pill">${escapeHtml(u.role)}</div>
+          </div>
+          <div class="muted" style="margin-top:0.35rem;">Created: ${escapeHtml(new Date(u.createdAt).toLocaleDateString())}</div>
+        `;
+        usersList.appendChild(div);
+      });
+    }
+
+    async function loadProperties() {
+      const token = getSessionToken();
+      const res = await apiGet('http://localhost:5000/api/admin/properties', token);
+      const list = res.properties || [];
+
+      propertiesCount.textContent = `${list.length} properties`;
+      propertiesEmpty.style.display = list.length ? 'none' : 'block';
+      propertiesGrid.innerHTML = '';
+
+      list.forEach((p) => {
+        const imgUrl = p.imageUrl && p.imageUrl.trim().length ? p.imageUrl.trim() : 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80';
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="img" style="background-image:url('${escapeHtml(imgUrl)}');">
+            ${p.price ? `<div class="badge">$${escapeHtml(p.price)}</div>` : ''}
+          </div>
+          <div class="content">
+            <h3 style="color:#333; font-size:1.2rem; margin-bottom:0.35rem;">${escapeHtml(p.title)}</h3>
+            <div class="small-muted">${escapeHtml(p.category || 'Property')}</div>
+            <div class="meta">
+              <span><i class="fas fa-map-marker-alt"></i> ${escapeHtml(p.location || '')}</span>
+              <span><i class="fas fa-user"></i> Owner: ${escapeHtml(p.ownerId || '')}</span>
+            </div>
+            <div class="muted" style="margin-top:0.7rem;">${p.description ? escapeHtml(p.description).slice(0,120) + (String(p.description).length>120?'...':'') : ''}</div>
+
+            <div class="inline-actions">
+              <button type="button" class="btn btn-ghost" data-action="edit" data-id="${escapeHtml(p.id)}">Edit</button>
+              <button type="button" class="btn btn-danger" data-action="delete" data-id="${escapeHtml(p.id)}">Delete</button>
+            </div>
+          </div>
+        `;
+
+        card.querySelector('[data-action="edit"]').addEventListener('click', () => setFormValues(p));
+        card.querySelector('[data-action="delete"]').addEventListener('click', async () => {
+          if (!confirm('Delete this property?')) return;
+          const token = getSessionToken();
+          await fetch('http://localhost:5000/api/admin/properties/' + p.id, {
+            method: 'DELETE',
+            headers: { Authorization: `Bearer ${token}` },
+          }).then((r) => r.json().catch(() => ({}))).then((data) => {
+            if (!data || data.message) {
+              // no-op
+            }
+          });
+          resetForm();
+          await loadProperties();
+        });
+
+        propertiesGrid.appendChild(card);
+      });
+    }
+
+    usersForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const token = getSessionToken();
+      const id = editingId.value;
+      if (!id) return alert('Select a property to edit (click Edit on a card).');
+
+      try {
+        await fetch('http://localhost:5000/api/admin/properties/' + id, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(getPayload()),
+        });
+        resetForm();
+        await loadProperties();
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+
+    (async () => {
+      const token = getSessionToken();
+      if (!token) return window.location.href = './login.html';
+
+      try {
+        const me = await apiGet('http://localhost:5000/api/auth/me', token);
+        document.getElementById('userName').textContent = me.user.name;
+
+        const protectedData = await apiGet('http://localhost:5000/api/protected/admin', token);
+        protectedResult.textContent = protectedData.message;
+
+        await loadUsers();
+        await loadProperties();
+      } catch (e) {
+        clearSession();
+        window.location.href = './login.html';
+      }
+    })();
+  </script>
+</body>
+</html>
+

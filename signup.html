@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up - Requify</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+</head>
+<body>
+  <header id="header">
+    <nav class="container">
+      <h1 class="logo">Requify</h1>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="./index.html#Home">Home</a></li>
+      </ul>
+      <a href="./login.html" class="cta-btn">Login</a>
+      <div class="mobile-menu-btn" id="mobileMenuBtn">
+        <span></span><span></span><span></span>
+      </div>
+    </nav>
+  </header>
+
+  <main style="padding-top: 8rem;">
+    <section class="auth-section">
+      <div class="container">
+        <div class="auth-card">
+          <h2 class="auth-title">Create Account</h2>
+          <p class="auth-subtitle">Sign up as user, owner, or admin.</p>
+
+          <div class="role-pills" role="group" aria-label="Role">
+            <input type="radio" name="role" id="role-user" value="user" checked />
+            <label for="role-user">User</label>
+
+            <input type="radio" name="role" id="role-owner" value="owner" />
+            <label for="role-owner">Owner</label>
+
+            <input type="radio" name="role" id="role-admin" value="admin" />
+            <label for="role-admin">Admin</label>
+          </div>
+
+          <form id="signupForm" class="auth-form" autocomplete="off">
+            <div class="form-group">
+              <label for="signupName">Full Name</label>
+              <input type="text" id="signupName" name="name" required minlength="2" />
+            </div>
+
+            <div class="form-group">
+              <label for="signupEmail">Email</label>
+              <input type="email" id="signupEmail" name="email" required />
+            </div>
+
+            <div class="form-group">
+              <label for="signupPassword">Password</label>
+              <input type="password" id="signupPassword" name="password" required minlength="8" />
+            </div>
+
+            <div id="authMessage" class="auth-message" role="status"></div>
+
+            <button class="submit-btn" type="submit">Sign Up</button>
+          </form>
+
+          <div class="auth-footer">
+            <span>Already have an account?</span>
+            <a href="./login.html">Login</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./auth.js"></script>
+  <script>
+    const signupForm = document.getElementById('signupForm');
+
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const role = document.querySelector('input[name="role"]:checked')?.value;
+      const name = document.getElementById('signupName').value;
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+
+      try {
+        renderToast('Creating account...', false);
+        const data = await apiPost('http://localhost:5000/api/auth/signup', { name, email, password, role });
+        setSession(data.token);
+        window.location.href = role === 'owner'
+          ? './owner-dashboard.html'
+          : role === 'admin'
+            ? './admin-dashboard.html'
+            : './user-dashboard.html';
+      } catch (err) {
+        renderToast(err.message, true);
+      }
+    });
+  </script>
+</body>
+</html>
+
