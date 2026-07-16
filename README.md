@@ -1,17 +1,21 @@
 # Requify (Real Estate Web App)
 
-A simple real-estate web application with a **Node/Express backend**, **JWT authentication**, and **role-based access** for **User / Owner / Admin**.
+A modern real-estate web application with a **Node/Express backend**, **JWT authentication**, and **role-based access** for **User / Owner / Admin**.
 
 ## Features
 
-- **Signup / Login** with JWT tokens
+- **Signup / Login** with JWT tokens and form validation
 - **Role-based dashboards**
-  - User
-  - Owner
-  - Admin
-- **Property search** (requires login)
-- **Owner CRUD** for managing their own property listings
-- **Admin management** for users and properties
+  - User - Search and view properties
+  - Owner - Manage property listings
+  - Admin - Manage users and all properties
+- **Property search** with advanced filters (location, type, price range)
+- **Property detail modal** with full information
+- **Favorite/Wishlist** functionality
+- **Mortgage Calculator** for EMI estimation
+- **Toast notifications** for better UX
+- **Responsive design** with mobile support
+- **SEO optimized** with meta tags and Open Graph
 
 ## Tech Stack
 
@@ -40,12 +44,16 @@ Backend runs at:
 - `backend/server.js` - Express server + API routes
 - `backend/data/users.json` - Dev user database (hashed passwords)
 - `backend/data/properties.json` - Dev property database
+- `config.js` - API configuration
+- `modal.js` - Property detail modal
 - Frontend pages:
   - `index.html` - Landing page + property search UI
-  - `login.html`, `signup.html`
-  - `user-dashboard.html`, `owner-dashboard.html`, `admin-dashboard.html`
+  - `login.html`, `signup.html` - Authentication pages
+  - `user-dashboard.html` - User dashboard
+  - `owner-dashboard.html` - Owner property management
+  - `admin-dashboard.html` - Admin panel
 - Styles:
-  - `css/style.css`
+  - `css/style.css` - Main stylesheet
 
 ## API Endpoints
 

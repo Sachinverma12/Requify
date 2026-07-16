@@ -94,18 +94,45 @@
                 </div>
                 <div class="form-group">
                   <label for="price">Price</label>
-                  <input id="price" type="text" placeholder="e.g. 850000" />
+                  <input id="price" type="text" placeholder="e.g. 8500000" />
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="form-group">
+                  <label for="bedrooms">Bedrooms</label>
+                  <input id="bedrooms" type="text" placeholder="e.g. 3" />
+                </div>
+                <div class="form-group">
+                  <label for="bathrooms">Bathrooms</label>
+                  <input id="bathrooms" type="text" placeholder="e.g. 2" />
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="form-group">
+                  <label for="area">Area (sq ft)</label>
+                  <input id="area" type="text" placeholder="e.g. 1500" />
+                </div>
+                <div class="form-group">
+                  <label for="imageUrl">Primary Image URL</label>
+                  <input id="imageUrl" type="text" placeholder="Main image URL" />
                 </div>
               </div>
 
               <div class="form-group">
-                <label for="imageUrl">Image URL</label>
-                <input id="imageUrl" type="text" placeholder="Optional" />
+                <label for="additionalImages">Additional Image URLs (one per line)</label>
+                <textarea id="additionalImages" rows="3" placeholder="Paste additional image URLs, one per line"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="features">Features (comma separated)</label>
+                <input id="features" type="text" placeholder="e.g. Swimming Pool, Gym, Garden" />
               </div>
 
               <div class="form-group">
                 <label for="description">Description</label>
-                <textarea id="description" rows="4" placeholder="Optional"></textarea>
+                <textarea id="description" rows="4" placeholder="Describe the property..."></textarea>
               </div>
 
               <div class="form-actions">
@@ -129,6 +156,8 @@
     </section>
   </main>
 
+  <script src="config.js"></script>
+  <script src="motion.js"></script>
   <script src="./auth.js"></script>
   <script>
     const logoutBtn = document.getElementById('logoutBtnTop');
@@ -156,6 +185,11 @@
       price: document.getElementById('price'),
       imageUrl: document.getElementById('imageUrl'),
       description: document.getElementById('description'),
+      bedrooms: document.getElementById('bedrooms'),
+      bathrooms: document.getElementById('bathrooms'),
+      area: document.getElementById('area'),
+      features: document.getElementById('features'),
+      additionalImages: document.getElementById('additionalImages'),
     };
 
     function escapeHtml(str) {
@@ -169,6 +203,16 @@
 
 
     function getFormPayload() {
+      const additionalImages = fields.additionalImages.value
+        .split('\n')
+        .map(url => url.trim())
+        .filter(url => url.length > 0);
+      
+      const features = fields.features.value
+        .split(',')
+        .map(f => f.trim())
+        .filter(f => f.length > 0);
+
       return {
         title: fields.title.value,
         category: fields.category.value,
@@ -176,6 +220,11 @@
         price: fields.price.value,
         imageUrl: fields.imageUrl.value,
         description: fields.description.value,
+        bedrooms: fields.bedrooms.value,
+        bathrooms: fields.bathrooms.value,
+        area: fields.area.value,
+        features: features,
+        images: additionalImages,
       };
     }
 
@@ -187,6 +236,11 @@
       fields.price.value = p.price ?? '';
       fields.imageUrl.value = p.imageUrl || '';
       fields.description.value = p.description || '';
+      fields.bedrooms.value = p.bedrooms || '';
+      fields.bathrooms.value = p.bathrooms || '';
+      fields.area.value = p.area || '';
+      fields.features.value = (p.features || []).join(', ');
+      fields.additionalImages.value = (p.images || []).join('\n');
 
       formTitle.textContent = 'Edit Property';
       formSubtitle.textContent = 'Update your listing details.';
@@ -207,7 +261,7 @@
 
     async function loadMyProperties() {
       const token = getSessionToken();
-      const res = await apiGet('http://localhost:5000/api/owner/properties', token);
+      const res = await apiGet('/api/owner/properties', token);
       const list = res.properties || [];
 
       myCount.textContent = `${list.length} ${list.length === 1 ? 'property' : 'properties'}`;
@@ -256,7 +310,8 @@
     }
 
     async function apiFetchDelete(url, token) {
-      const res = await fetch(url, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+      const fullUrl = url.startsWith('http') ? url : (window.API_CONFIG?.BASE_URL || '') + url;
+      const res = await fetch(fullUrl, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.message || 'Request failed');
       return data;
@@ -269,25 +324,17 @@
       try {
         const payload = getFormPayload();
         if (editingId.value) {
-          await fetch('http://localhost:5000/api/owner/properties/' + editingId.value, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(payload),
-          });
-
+          await apiPut('/api/owner/properties/' + editingId.value, payload, token);
           await loadMyProperties();
           resetForm();
           return;
         }
 
-        const data = await apiPost('http://localhost:5000/api/owner/properties', payload);
+        const data = await apiPost('/api/owner/properties', payload);
         resetForm();
         await loadMyProperties();
       } catch (err) {
-        alert(err.message);
+        showToast(err.message, 'error');
       }
     });
 
@@ -296,10 +343,10 @@
       if (!token) return (window.location.href = './login.html');
 
       try {
-        const me = await apiGet('http://localhost:5000/api/auth/me', token);
+        const me = await apiGet('/api/auth/me', token);
         document.getElementById('userName').textContent = me.user.name;
 
-        const protectedData = await apiGet('http://localhost:5000/api/protected/owner', token);
+        const protectedData = await apiGet('/api/protected/owner', token);
         document.getElementById('protectedResult').textContent = protectedData.message;
 
         await loadMyProperties();

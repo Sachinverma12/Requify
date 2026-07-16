@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="theme-color" content="#0a0a0f" />
+    <title>Search Properties - Requify</title>
+    <meta name="description" content="Search and filter properties for sale and rent across India." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header id="header">
+        <nav class="container">
+            <div class="logo-wrap">
+                <div class="logo-icon"><i class="fas fa-home"></i></div>
+                <h1 class="logo">Requify</h1>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="./index.html">Home</a></li>
+                <li><a href="./search.html" class="nav-active">Search</a></li>
+                <li><a href="./index.html#properties">Properties</a></li>
+                <li><a href="./index.html#Services">Services</a></li>
+                <li><a href="./index.html#About">About</a></li>
+                <li><a href="./index.html#Contact">Contact</a></li>
+            </ul>
+            <div id="authNav" class="nav-auth">
+                <a href="./login.html" class="nav-cta">Get Started</a>
+            </div>
+            <div class="mobile-menu-btn" id="mobileMenuBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Search Hero -->
+    <section class="hero-modern" id="searchHero" style="min-height: 50vh; padding: 8rem 0 3rem;">
+        <div class="hero-bg-pattern"></div>
+        <div class="hero-content-modern">
+            <span class="hero-badge">Find Your Perfect Property</span>
+            <h1 class="hero-title">Search <span class="gradient-text">Properties</span></h1>
+            <p class="hero-subtitle">Browse thousands of listings for sale and rent across India.</p>
+
+            <div class="hero-search-box">
+                <div class="search-tabs">
+                    <button class="search-tab active" data-tab="buy">Buy</button>
+                    <button class="search-tab" data-tab="rent">Rent</button>
+                    <button class="search-tab" data-tab="commercial">Commercial</button>
+                </div>
+                <div class="search-fields">
+                    <div class="sf-input">
+                        <i class="fas fa-search"></i>
+                        <input id="indexSearchInput" type="text" placeholder="Search by city, locality or project..." />
+                    </div>
+                    <div class="sf-select">
+                        <select id="filterTypeHero">
+                            <option value="">Property Type</option>
+                            <option value="apartment">Apartment</option>
+                            <option value="villa">Villa</option>
+                            <option value="house">Independent House</option>
+                            <option value="plot">Plot</option>
+                            <option value="commercial">Commercial</option>
+                            <option value="penthouse">Penthouse</option>
+                        </select>
+                    </div>
+                    <div class="sf-select">
+                        <select id="filterBudgetHero">
+                            <option value="">Budget</option>
+                            <option value="500000">Under ₹5 Lakh</option>
+                            <option value="1000000">Under ₹10 Lakh</option>
+                            <option value="5000000">Under ₹50 Lakh</option>
+                            <option value="10000000">Under ₹1 Crore</option>
+                            <option value="50000000">Under ₹5 Crore</option>
+                            <option value="100000000">₹10 Crore+</option>
+                        </select>
+                    </div>
+                    <button id="heroSearchBtn" class="hero-search-btn">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Properties Results -->
+    <section class="properties" id="properties">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Search Results</span>
+                <h2 class="section-title-modern">Properties</h2>
+                <p class="section-desc">Properties matching your search criteria</p>
+            </div>
+
+            <!-- Auth Tip -->
+            <div id="indexAuthTip" class="auth-tip" style="display: none; text-align: center; padding: 3rem 1rem;">
+                <i class="fas fa-lock" style="font-size: 3rem; color: var(--primary-400); margin-bottom: 1rem; display: block;"></i>
+                <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;">Login Required</h3>
+                <p style="color: var(--text-tertiary); margin-bottom: 1.5rem;">Please login to search real listings and contact property owners.</p>
+                <a href="./login.html" class="nav-cta" style="display: inline-block;">Login Now</a>
+            </div>
+
+            <!-- Property Type Tabs -->
+            <div class="prop-tabs">
+                <button class="prop-tab active" data-type="all">All</button>
+                <button class="prop-tab" data-type="apartment">Apartments</button>
+                <button class="prop-tab" data-type="villa">Villas</button>
+                <button class="prop-tab" data-type="house">Houses</button>
+                <button class="prop-tab" data-type="plot">Plots</button>
+            </div>
+
+            <!-- Advanced Filters -->
+            <div class="filter-section fade-in">
+                <div class="filter-header" id="filterToggle">
+                    <i class="fas fa-sliders-h"></i>
+                    <span>Advanced Filters</span>
+                    <i class="fas fa-chevron-down filter-arrow"></i>
+                </div>
+                <div class="filter-body" id="filterBody">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="filterLocation">Location</label>
+                            <input type="text" id="filterLocation" placeholder="Search by city, area..." />
+                        </div>
+                        <div class="filter-group">
+                            <label for="filterType">Property Type</label>
+                            <select id="filterType">
+                                <option value="">All Types</option>
+                                <option value="apartment">Apartment</option>
+                                <option value="villa">Villa</option>
+                                <option value="house">Independent House</option>
+                                <option value="plot">Plot</option>
+                                <option value="commercial">Commercial</option>
+                                <option value="penthouse">Penthouse</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filterPriceMin">Min Price</label>
+                            <select id="filterPriceMin">
+                                <option value="">No Min</option>
+                                <option value="500000">₹5 Lakh</option>
+                                <option value="1000000">₹10 Lakh</option>
+                                <option value="2000000">₹20 Lakh</option>
+                                <option value="5000000">₹50 Lakh</option>
+                                <option value="10000000">₹1 Crore</option>
+                                <option value="20000000">₹2 Crore</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filterPriceMax">Max Price</label>
+                            <select id="filterPriceMax">
+                                <option value="">No Max</option>
+                                <option value="1000000">₹10 Lakh</option>
+                                <option value="2000000">₹20 Lakh</option>
+                                <option value="5000000">₹50 Lakh</option>
+                                <option value="10000000">₹1 Crore</option>
+                                <option value="20000000">₹2 Crore</option>
+                                <option value="50000000">₹5 Crore</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="filterBedrooms">Bedrooms</label>
+                            <select id="filterBedrooms">
+                                <option value="">Any</option>
+                                <option value="1">1 BHK</option>
+                                <option value="2">2 BHK</option>
+                                <option value="3">3 BHK</option>
+                                <option value="4">4+ BHK</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filterBathrooms">Bathrooms</label>
+                            <select id="filterBathrooms">
+                                <option value="">Any</option>
+                                <option value="1">1+</option>
+                                <option value="2">2+</option>
+                                <option value="3">3+</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filterCategory">Category</label>
+                            <select id="filterCategory">
+                                <option value="">All</option>
+                                <option value="sale">For Sale</option>
+                                <option value="rent">For Rent</option>
+                            </select>
+                        </div>
+                        <div class="filter-group filter-actions">
+                            <button id="indexSearchBtn" class="filter-apply">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                            <button id="indexSearchClear" class="filter-clear">
+                                <i class="fas fa-times"></i> Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="properties-header">
+                <h3 id="indexPropertiesCount">0 properties</h3>
+                <div class="pv-toggle">
+                    <button class="pv-btn active" data-view="grid" title="Grid View"><i class="fas fa-th"></i></button>
+                    <button class="pv-btn" data-view="list" title="List View"><i class="fas fa-list"></i></button>
+                </div>
+            </div>
+
+            <div id="indexPropertiesGrid" class="properties-grid"></div>
+            <div id="indexPropertiesEmpty" class="properties-empty" style="display: none;">
+                <i class="fas fa-search-minus"></i>
+                <h3>No properties found</h3>
+                <p>Try adjusting your search or filter criteria</p>
+            </div>
+            <div id="indexPropertiesError" class="properties-error" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Compare Bar -->
+    <div id="compareBar" class="compare-bar">
+        <div class="container compare-bar-inner">
+            <div class="compare-bar-left">
+                <span class="compare-bar-title">
+                    <i class="fas fa-balance-scale"></i> Compare Properties (<span id="compareCount">0</span>/3)
+                </span>
+                <div id="compareItems" class="compare-items"></div>
+            </div>
+            <div class="compare-bar-right">
+                <button onclick="showCompareModal()" class="compare-btn-action">
+                    <i class="fas fa-chart-bar"></i> Compare Now
+                </button>
+                <button onclick="clearCompare()" class="compare-btn-clear">
+                    <i class="fas fa-times"></i> Clear
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo-wrap">
+                        <div class="logo-icon"><i class="fas fa-home"></i></div>
+                        <h2 class="logo">Requify</h2>
+                    </div>
+                    <p>Find your dream home with Requify. Trusted by thousands across India.</p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <a href="./index.html">Home</a>
+                    <a href="./index.html#properties">Properties</a>
+                    <a href="./index.html#Services">Services</a>
+                    <a href="./index.html#About">About Us</a>
+                    <a href="./index.html#Contact">Contact</a>
+                    <a href="./search.html">Search Properties</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Property Types</h4>
+                    <a href="./search.html?type=apartment">Apartments</a>
+                    <a href="./search.html?type=villa">Villas</a>
+                    <a href="./search.html?type=house">Houses</a>
+                    <a href="./search.html?type=plot">Plots</a>
+                    <a href="./search.html?type=commercial">Commercial</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Contact Info</h4>
+                    <a href="#"><i class="fas fa-map-marker-alt"></i> 123 Main Street, Mumbai City</a>
+                    <a href="#"><i class="fas fa-phone"></i> +91 123 456 7890</a>
+                    <a href="#"><i class="fas fa-envelope"></i> info@requify.com</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Requify. All rights reserved. | <a href="/privacy">Privacy Policy</a> | <a href="/terms">Terms of Service</a> | <a href="/about">About Us</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        .compare-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--primary-50);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--primary);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        .compare-remove {
+            background: none;
+            border: none;
+            color: var(--error);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0;
+            line-height: 1;
+        }
+        .compare-remove:hover {
+            transform: scale(1.2);
+        }
+        .properties-error {
+            text-align: center;
+            padding: 2rem;
+            color: var(--error);
+        }
+        .properties-error i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+
+    <script src="config.js"></script>
+    <script src="modal.js"></script>
+    <script src="compare.js"></script>
+    <script src="reviews.js"></script>
+    <script src="motion.js"></script>
+    <script src="script.js"></script>
+    <script src="index-search.js"></script>
+    <script src="auth.js"></script>
+    <script>
+    (function() {
+        const token = localStorage.getItem('token');
+        const authNav = document.getElementById('authNav');
+        if (token) {
+            fetch((window.API_CONFIG?.BASE_URL || 'http://localhost:5000') + '/api/auth/me', {
+                headers: { Authorization: 'Bearer ' + token }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.user) {
+                    const user = data.user;
+                    const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+                    authNav.innerHTML = `
+                        <a href="./search.html" class="nav-search-link" title="Search Properties">
+                            <i class="fas fa-search"></i>
+                        </a>
+                        <a href="./profile.html" class="user-badge">
+                            <span class="user-avatar">${initials}</span>
+                            ${user.name.split(' ')[0]}
+                        </a>
+                        <button onclick="localStorage.removeItem('token'); localStorage.removeItem('user'); window.location.reload();"
+                                class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    `;
+                }
+            })
+            .catch(() => {});
+        }
+    })();
+    </script>
+</body>
+
+</html>

@@ -1,6 +1,39 @@
+# Dependencies
 node_modules/
+
+# Environment variables (contains secrets!)
 .env
-backend/.env
-*.log
+.env.local
+.env.production
+
+# Backend data (password hashes, user data, property data)
+backend/data/
+!backend/data/.gitkeep
+!backend/data/users.example.json
+!backend/data/properties.example.json
+
+# IDE & OS files
+.vs/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 .DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime
+pids/
+*.pid
+*.seed
+
+# Coverage
+coverage/
+.nyc_output/
 

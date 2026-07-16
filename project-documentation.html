@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Requify - Project Documentation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter',sans-serif; color:#1e293b; background:#fff; line-height:1.6; }
+  .page { max-width:900px; margin:0 auto; padding:40px 50px; }
+  h1 { font-size:2.5rem; font-weight:800; letter-spacing:-0.02em; margin-bottom:0.25em; }
+  h2 { font-size:1.6rem; font-weight:700; color:#4f46e5; border-bottom:3px solid #e0e7ff; padding-bottom:6px; margin:50px 0 20px; }
+  h3 { font-size:1.15rem; font-weight:600; color:#1e293b; margin:30px 0 10px; }
+  h4 { font-weight:600; color:#475569; margin:18px 0 6px; }
+  p, li { color:#334155; }
+  .subtitle { font-size:1.1rem; color:#64748b; margin-bottom:30px; }
+  .cover { text-align:center; padding:100px 0 60px; }
+  .cover .logo-icon { font-size:3rem; display:block; margin-bottom:20px; }
+  .cover h1 { font-size:3rem; }
+  .cover .meta { margin-top:40px; color:#94a3b8; font-size:0.9rem; }
+  table { width:100%; border-collapse:collapse; margin:15px 0 25px; font-size:0.9rem; }
+  th, td { text-align:left; padding:8px 12px; border:1px solid #e2e8f0; }
+  th { background:#f1f5f9; font-weight:600; color:#1e293b; }
+  tr:nth-child(even) td { background:#f8fafc; }
+  pre { background:#0f172a; color:#e2e8f0; padding:16px 20px; border-radius:10px; overflow-x:auto; font-family:'JetBrains Mono',monospace; font-size:0.8rem; line-height:1.5; margin:12px 0; }
+  code { font-family:'JetBrains Mono',monospace; background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:0.85em; }
+  pre code { background:transparent; padding:0; }
+  .tag { display:inline-block; padding:2px 10px; border-radius:20px; font-size:0.75rem; font-weight:600; margin-right:4px; }
+  .tag-backend { background:#dbeafe; color:#1e40af; }
+  .tag-frontend { background:#fce7f3; color:#9d174d; }
+  .tag-html { background:#fef3c7; color:#92400e; }
+  .tag-config { background:#e0e7ff; color:#3730a3; }
+  .badge { display:inline-block; background:#4f46e5; color:#fff; padding:1px 10px; border-radius:20px; font-size:0.75rem; font-weight:600; }
+  .toc { background:#f8fafc; border-radius:12px; padding:20px 28px; margin:30px 0; }
+  .toc a { color:#4f46e5; text-decoration:none; display:block; padding:4px 0; font-size:0.95rem; }
+  .toc a:hover { text-decoration:underline; }
+  .toc .toc-h2 { font-weight:600; margin-top:10px; }
+  .toc .toc-h3 { padding-left:20px; font-size:0.85rem; }
+  .section-desc { color:#64748b; margin-bottom:12px; font-size:0.95rem; }
+  .file-path { font-family:'JetBrains Mono',monospace; font-size:0.85rem; color:#64748b; margin-bottom:6px; }
+  ul, ol { padding-left:20px; margin:8px 0 16px; }
+  li { margin:4px 0; }
+  .info-box { background:#f0f9ff; border-left:4px solid #0ea5e9; padding:14px 18px; border-radius:6px; margin:16px 0; font-size:0.9rem; }
+  .warn-box { background:#fef2f2; border-left:4px solid #ef4444; padding:14px 18px; border-radius:6px; margin:16px 0; font-size:0.9rem; }
+  .arch-box { display:flex; gap:16px; margin:20px 0; flex-wrap:wrap; }
+  .arch-item { flex:1; min-width:160px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:16px; text-align:center; }
+  .arch-item .title { font-weight:600; font-size:0.9rem; color:#1e293b; }
+  .arch-item .desc { font-size:0.78rem; color:#64748b; margin-top:4px; }
+  .arch-arrow { font-size:1.4rem; color:#94a3b8; align-self:center; }
+  .page-break { page-break-before:always; }
+  @media print { body { font-size:11pt; } .page { padding:0.75in; } pre { font-size:7pt; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- COVER -->
+<div class="cover">
+  <div class="logo-icon">🏠</div>
+  <h1>Requify</h1>
+  <p class="subtitle">Real Estate Web Application — Complete Project Documentation</p>
+  <p style="color:#64748b;max-width:540px;margin:0 auto 30px;">
+    A full-stack real estate platform with JWT-based authentication, role-based dashboards,
+    property search &amp; filtering, and a modern dark-theme UI with motion animations.
+  </p>
+  <div class="meta">
+    <p>Generated: July 2026</p>
+    <p>Total Files: 28 &middot; Backend: Node.js/Express &middot; Frontend: Vanilla JS + CSS</p>
+  </div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+  <strong style="font-size:1.1rem;">Table of Contents</strong>
+  <a href="#arch" class="toc-h2">1. Architecture Overview</a>
+  <a href="#files" class="toc-h2">2. File-by-File Reference</a>
+  <a href="#srv" class="toc-h3">2.1 Backend Server</a>
+  <a href="#data" class="toc-h3">2.2 Data Layer</a>
+  <a href="#cfg" class="toc-h3">2.3 Configuration</a>
+  <a href="#front-js" class="toc-h3">2.4 Frontend JavaScript</a>
+  <a href="#pages" class="toc-h3">2.5 HTML Pages</a>
+  <a href="#css" class="toc-h3">2.6 Stylesheet</a>
+  <a href="#sec" class="toc-h2">3. Security &amp; Deployment</a>
+</div>
+
+<!-- 1. ARCHITECTURE -->
+<h2 id="arch">1. Architecture Overview</h2>
+<p class="section-desc">Single-page-inspired architecture using static HTML files served by Express, with a JSON-file-based REST API.</p>
+
+<div class="arch-box">
+  <div class="arch-item"><div class="title">🌐 Browser</div><div class="desc">HTML/CSS/JS served statically</div></div>
+  <div style="font-size:2rem;color:#94a3b8;align-self:center;">→</div>
+  <div class="arch-item"><div class="title">📦 Express Server</div><div class="desc">Static file host + REST API on :5000</div></div>
+  <div style="font-size:2rem;color:#94a3b8;align-self:center;">→</div>
+  <div class="arch-item"><div class="title">📁 JSON Files</div><div class="desc">users.json + properties.json</div></div>
+</div>
+
+<h3>Data Flow</h3>
+<ol>
+  <li><strong>Auth:</strong> Login/Signup → POST /api/auth/* → JWT issued → stored in localStorage</li>
+  <li><strong>Protected API:</strong> Every subsequent request includes <code>Authorization: Bearer &lt;token&gt;</code> header</li>
+  <li><strong>Role gating:</strong> Middleware checks <code>req.user.role</code> — user/owner/admin get different access levels</li>
+  <li><strong>Search:</strong> GET /api/properties?search=...&amp;type=...&amp;bedrooms=... → server filters in-memory</li>
+  <li><strong>Owner CRUD:</strong> POST/PUT/DELETE /api/owner/properties — scoped to <code>ownerId</code></li>
+  <li><strong>Admin:</strong> Full access to all users and properties via /api/admin/*</li>
+</ol>
+
+<h3>Key Technologies</h3>
+<table>
+  <tr><th>Layer</th><th>Technology</th><th>Purpose</th></tr>
+  <tr><td>Server</td><td>Express 5</td><td>HTTP server + routing + middleware</td></tr>
+  <tr><td>Auth</td><td>jsonwebtoken + bcryptjs</td><td>JWT signing/verification, password hashing (cost 12)</td></tr>
+  <tr><td>Security</td><td>helmet + express-rate-limit</td><td>HTTP security headers, brute-force protection</td></tr>
+  <tr><td>Storage</td><td>JSON files (dev)</td><td>Low-friction development; swap to DB in production</td></tr>
+  <tr><td>Frontend</td><td>Vanilla JS (no framework)</td><td>Auth helpers, search engine, animations, modals</td></tr>
+  <tr><td>Styling</td><td>Single CSS file (~3800 lines)</td><td>Dark theme, responsive, motion animations</td></tr>
+</table>
+
+<!-- 2. FILE-BY-FILE -->
+<h2 id="files">2. File-by-File Reference</h2>
+<p class="section-desc">Every file in the project, its role, key functions, and how it connects to the rest of the system.</p>
+
+<!-- 2.1 Backend Server -->
+<h3 id="srv">2.1 Backend Server</h3>
+
+<h4>backend/server.js <span class="tag tag-backend">backend</span></h4>
+<p><strong>Role:</strong> Express API server — handles authentication, property CRUD, search/filter, role-based authorization, and static file serving.</p>
+<p><strong>Lines:</strong> 435 (after security hardening)</p>
+
+<p><strong>Key Functions:</strong></p>
+<table>
+  <tr><th>Function</th><th>Purpose</th></tr>
+  <tr><td><code>readUsers()</code> / <code>writeUsers()</code></td><td>JSON file I/O for user data</td></tr>
+  <tr><td><code>readProperties()</code> / <code>writeProperties()</code></td><td>JSON file I/O for property data</td></tr>
+  <tr><td><code>signToken(user)</code></td><td>Creates JWT with <code>{sub, role, email}</code> payload</td></tr>
+  <tr><td><code>requireAuth</code></td><td>Middleware — verifies Bearer token, sets <code>req.user</code></td></tr>
+  <tr><td><code>requireRole(...roles)</code></td><td>Middleware — checks <code>req.user.role</code> against allowed roles</td></tr>
+  <tr><td><code>sanitize(str)</code></td><td>Strips <code>&lt; &gt; " ' &amp;</code> from all text inputs</td></tr>
+  <tr><td><code>isPasswordStrong(pw)</code></td><td>Validates min 8 chars, uppercase, lowercase, digit</td></tr>
+  <tr><td><code>matchesPropertySearch(prop, search)</code></td><td>Substring match on title/location/category/description/price</td></tr>
+</table>
+
+<p><strong>API Routes:</strong></p>
+<table>
+  <tr><th>Method</th><th>Path</th><th>Auth</th><th>Role</th><th>Purpose</th></tr>
+  <tr><td>GET</td><td>/api/health</td><td>—</td><td>—</td><td>Health check</td></tr>
+  <tr><td>POST</td><td>/api/auth/signup</td><td>—</td><td>—</td><td>Register (bcrypt cost 12, password strength check)</td></tr>
+  <tr><td>POST</td><td>/api/auth/login</td><td>—</td><td>—</td><td>Login (rate-limited: 20/15min)</td></tr>
+  <tr><td>GET</td><td>/api/auth/me</td><td>✓</td><td>—</td><td>Get current user profile</td></tr>
+  <tr><td>GET</td><td>/api/properties</td><td>✓</td><td>user/owner/admin</td><td>Search with structured filters (type, location, price range, bedrooms, bathrooms, category, text)</td></tr>
+  <tr><td>GET</td><td>/api/owner/properties</td><td>✓</td><td>owner</td><td>List owner's listings</td></tr>
+  <tr><td>POST</td><td>/api/owner/properties</td><td>✓</td><td>owner</td><td>Create listing (sanitized)</td></tr>
+  <tr><td>PUT</td><td>/api/owner/properties/:id</td><td>✓</td><td>owner</td><td>Update own listing (ownership verified)</td></tr>
+  <tr><td>DELETE</td><td>/api/owner/properties/:id</td><td>✓</td><td>owner</td><td>Delete own listing</td></tr>
+  <tr><td>GET</td><td>/api/admin/users</td><td>✓</td><td>admin</td><td>List all users (no passwordHash leaked)</td></tr>
+  <tr><td>GET</td><td>/api/admin/properties</td><td>✓</td><td>admin</td><td>List all properties</td></tr>
+  <tr><td>PUT</td><td>/api/admin/properties/:id</td><td>✓</td><td>admin</td><td>Edit any property</td></tr>
+  <tr><td>DELETE</td><td>/api/admin/properties/:id</td><td>✓</td><td>admin</td><td>Delete any property</td></tr>
+</table>
+
+<p><strong>Security Middleware (in order):</strong></p>
+<pre><code>app.use(helmet());                          // HTTP security headers
+app.use(express.json({ limit: '1mb' }));   // Body parser with size limit
+app.use(cors({ origin: CORS_ORIGIN }));     // CORS (configurable via env)
+app.use('/api/auth/login', authLimiter);    // Rate limit: 20 req/15min
+app.use('/api/auth/signup', authLimiter);
+app.use('/api/', generalLimiter);           // Rate limit: 200 req/15min</code></pre>
+
+<div class="page-break"></div>
+
+<!-- 2.2 Data Layer -->
+<h3 id="data">2.2 Data Layer</h3>
+
+<h4>backend/data/users.json <span class="tag tag-backend">data</span></h4>
+<p><strong>Role:</strong> Live user database (gitignored — not pushed to GitHub)</p>
+<table>
+  <tr><th>Field</th><th>Type</th><th>Example</th></tr>
+  <tr><td>id</td><td>string (hex)</td><td><code>c49b07adc5a1db1493a076698de01f2e</code></td></tr>
+  <tr><td>name</td><td>string</td><td><code>"Sachin Verma"</code></td></tr>
+  <tr><td>email</td><td>string</td><td><code>"sachin@example.com"</code></td></tr>
+  <tr><td>passwordHash</td><td>string (bcrypt)</td><td><code>$2b$12$...</code></td></tr>
+  <tr><td>role</td><td>string</td><td><code>"user"</code> | <code>"owner"</code> | <code>"admin"</code></td></tr>
+  <tr><td>createdAt</td><td>ISO string</td><td><code>2024-01-01T00:00:00.000Z</code></td></tr>
+</table>
+
+<h4>backend/data/properties.json <span class="tag tag-backend">data</span></h4>
+<p><strong>Role:</strong> Live property listings database (gitignored). Contains 30 sample properties across all categories.</p>
+<table>
+  <tr><th>Field</th><th>Type</th><th>Example</th></tr>
+  <tr><td>id, ownerId</td><td>string</td><td><code>"prop_mumbai_001"</code>, <code>"c49b07ad..."</code></td></tr>
+  <tr><td>title</td><td>string</td><td><code>"Luxury 3BHK Apartment with Sea View"</code></td></tr>
+  <tr><td>location</td><td>string</td><td><code>"Worli Sea Face, Mumbai"</code></td></tr>
+  <tr><td>price</td><td>string (numeric)</td><td><code>"45000000"</code></td></tr>
+  <tr><td>category</td><td>string</td><td><code>"Apartment"</code> | <code>"Villa"</code> | <code>"House"</code> | <code>"Plot"</code> | <code>"Commercial"</code> | <code>"Penthouse"</code></td></tr>
+  <tr><td>bedrooms, bathrooms, area</td><td>string</td><td><code>"3"</code>, <code>"3"</code>, <code>"1850"</code></td></tr>
+  <tr><td>features</td><td>string[]</td><td><code>["Sea View", "Modular Kitchen"]</code></td></tr>
+</table>
+
+<h4>backend/data/*.example.json <span class="tag tag-config">template</span></h4>
+<p>Schema templates showing exact JSON structure, committed to GitHub so developers know the expected format.</p>
+
+<h4>backend/data/.gitkeep <span class="tag tag-config">placeholder</span></h4>
+<p>Empty file to keep the <code>backend/data/</code> directory in version control (directory is otherwise gitignored).</p>
+
+<!-- 2.3 Configuration -->
+<h3 id="cfg">2.3 Configuration Files</h3>
+
+<h4>.env <span class="tag tag-config">env</span></h4>
+<p><strong>Role:</strong> Environment variables loaded by <code>dotenv</code>. Contains secrets — <strong>never committed to GitHub</strong>.</p>
+<pre><code>JWT_SECRET=dev_secret_change_me
+JWT_EXPIRES_IN=7d
+PORT=5000</code></pre>
+
+<h4>.env.example <span class="tag tag-config">template</span></h4>
+<p>Documented template committed to repo so other developers know what variables to set.</p>
+<pre><code># Generate a strong secret:
+#   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+JWT_SECRET=your_strong_random_secret_here
+JWT_EXPIRES_IN=7d
+PORT=5000
+# CORS_ORIGIN=https://yourdomain.com</code></pre>
+
+<h4>.gitignore <span class="tag tag-config">config</span></h4>
+<p>Excludes <code>node_modules/</code>, <code>.env</code>, <code>backend/data/</code>, IDE files, OS files, logs, and coverage data. Exception: <code>*.example.json</code> and <code>.gitkeep</code> are included so directory structure is documented.</p>
+
+<h4>config.js <span class="tag tag-frontend">frontend</span></h4>
+<p><strong>Role:</strong> Frontend API configuration singleton. Loaded before all other scripts on every page.</p>
+<p><strong>Export:</strong> <code>window.API_CONFIG</code></p>
+<pre><code>const API_CONFIG = {
+  BASE_URL: 'http://localhost:5000',
+  ENDPOINTS: {
+    AUTH:    { LOGIN: '/api/auth/login', SIGNUP: '/api/auth/signup', ME: '/api/auth/me' },
+    PROPERTIES: { SEARCH: '/api/properties', OWNER: '/api/owner/properties', ADMIN: '/api/admin/properties' },
+    ADMIN:  { USERS: '/api/admin/users' }
+  }
+};</code></pre>
+
+<h4>package.json <span class="tag tag-config">manifest</span></h4>
+<p><strong>Role:</strong> Node.js manifest. Start command: <code>nodemon backend/server.js</code>.</p>
+<p><strong>Dependencies:</strong> bcryptjs, cors, dotenv, express, express-rate-limit, helmet, jsonwebtoken</p>
+<p><strong>Dev Dependency:</strong> nodemon</p>
+
+<div class="page-break"></div>
+
+<!-- 2.4 Frontend JavaScript -->
+<h3 id="front-js">2.4 Frontend JavaScript Files</h3>
+
+<h4>auth.js <span class="tag tag-frontend">shared</span> (154 lines)</h4>
+<p><strong>Role:</strong> Universal auth and utility library — every page depends on it.</p>
+<table>
+  <tr><th>Function</th><th>Purpose</th></tr>
+  <tr><td><code>apiPost(url, body)</code></td><td>HTTP POST with JSON body</td></tr>
+  <tr><td><code>apiGet(url, token)</code></td><td>HTTP GET with optional Bearer token</td></tr>
+  <tr><td><code>apiPut(url, body, token)</code></td><td>HTTP PUT for updates</td></tr>
+  <tr><td><code>apiDelete(url, token)</code></td><td>HTTP DELETE</td></tr>
+  <tr><td><code>setSession(token, user)</code></td><td>Saves JWT + user object to localStorage</td></tr>
+  <tr><td><code>clearSession()</code></td><td>Clears token, user, favorites from localStorage</td></tr>
+  <tr><td><code>showToast(msg, type, duration)</code></td><td>Animated toast notification (success/error/info/warning)</td></tr>
+  <tr><td><code>formatPrice(price)</code></td><td>Formats ₹ amounts: <code>1.5 Cr</code>, <code>50 L</code>, <code>1,00,000</code></td></tr>
+  <tr><td><code>toggleFavorite(propertyId)</code></td><td>Adds/removes from localStorage wishlist</td></tr>
+</table>
+<p><strong>Used by:</strong> All HTML pages for API calls, session management, toasts, and price formatting.</p>
+
+<h4>script.js <span class="tag tag-frontend">core</span> (402 lines)</h4>
+<p><strong>Role:</strong> Core site interactivity — scroll effects, mobile menu, animations, mortgage calculator, and a client-side filter system.</p>
+<table>
+  <tr><th>Feature</th><th>Details</th></tr>
+  <tr><td>Header scroll</td><td>Shrink + box-shadow on scroll</td></tr>
+  <tr><td>Mobile menu</td><td>Hamburger → X animation toggle</td></tr>
+  <tr><td>Smooth scroll</td><td>Anchor links with <code>scrollIntoView</code></td></tr>
+  <tr><td>IntersectionObserver</td><td>Fade-in, slide-up on scroll</td></tr>
+  <tr><td>Stats counter</td><td>Animated number increment on viewport entry</td></tr>
+  <tr><td>Hero parallax</td><td>TranslateY + fade based on scroll</td></tr>
+  <tr><td>Typewriter</td><td>Character-by-character text animation</td></tr>
+  <tr><td>Card tilt</td><td>3D perspective rotation on hover</td></tr>
+  <tr><td>EMI calculator</td><td>Loan EMI computation with interest breakdown</td></tr>
+  <tr><td><code>applyFilters()</code></td><td>Client-side property filtering (legacy — superseded by server-side search)</td></tr>
+  <tr><td><code>setAllProperties(props)</code></td><td>Caches property list for client-side filtering</td></tr>
+</table>
+<p><strong>Loaded on:</strong> <code>index.html</code>, <code>search.html</code></p>
+
+<h4>index-search.js <span class="tag tag-frontend">search engine</span> (378 lines)</h4>
+<p><strong>Role:</strong> The property search and filtering engine for the homepage and search page. Handles both the hero search and the advanced filter panel.</p>
+<table>
+  <tr><th>Function</th><th>Purpose</th></tr>
+  <tr><td><code>renderCards(properties)</code></td><td>Builds property-card-modern elements, wires favorite/compare/click-to-modal</td></tr>
+  <tr><td><code>collectFilters()</code></td><td>Reads all advanced filter inputs (location, type, price range, bedrooms, bathrooms, category)</td></tr>
+  <tr><td><code>collectHeroFilters()</code></td><td>Reads hero search inputs (text, property type, budget — correctly maps ₹10 Cr+ as priceMin)</td></tr>
+  <tr><td><code>loadProperties(filters)</code></td><td>Sends structured GET request to /api/properties with URLSearchParams, renders results</td></tr>
+</table>
+<p><strong>Event wiring in <code>start()</code>:</strong></p>
+<ul>
+  <li>Hero search button → <code>collectHeroFilters()</code></li>
+  <li>Advanced "Search" button → <code>collectFilters()</code></li>
+  <li>Debounced text input → text-only search</li>
+  <li>Enter in hero → hero filters; Enter in secondary bar → advanced filters</li>
+  <li>Clear → resets all filters including hero dropdowns</li>
+  <li>Property type tabs → auto-reset to "All" after new search</li>
+</ul>
+<p><strong>Loaded on:</strong> <code>index.html</code>, <code>search.html</code></p>
+
+<h4>motion.js <span class="tag tag-frontend">animation</span> (379 lines)</h4>
+<p><strong>Role:</strong> Requify Motion Engine — advanced animations and micro-interactions. Self-executing IIFE; no exports needed.</p>
+<table>
+  <tr><th>Animation</th><th>Description</th></tr>
+  <tr><td>Custom cursor</td><td>Dual-layer ring + dot with lerp smoothing</td></tr>
+  <tr><td>Magnetic buttons</td><td>Buttons translate toward cursor on hover</td></tr>
+  <tr><td>Scroll progress bar</td><td>Fixed gradient bar at viewport top</td></tr>
+  <tr><td>Staggered card entrance</td><td>Cards fade in with staggered delays</td></tr>
+  <tr><td>Parallax</td><td>Multi-layer parallax on hero and data-parallax elements</td></tr>
+  <tr><td>Text reveal</td><td>Character-by-character reveal with stagger</td></tr>
+  <tr><td>Tilt effect</td><td>3D perspective rotation on property cards</td></tr>
+  <tr><td>Image reveal</td><td>Clip-path reveal on scroll</td></tr>
+  <tr><td>Ripple</td><td>Click ripple on buttons</td></tr>
+  <tr><td>Page transition</td><td>Overlay + loader on page navigation</td></tr>
+</table>
+<p><strong>Loaded on:</strong> Every page</p>
+
+<div class="page-break"></div>
+
+<h4>modal.js <span class="tag tag-frontend">modal</span> (199 lines)</h4>
+<p><strong>Role:</strong> Full-screen property detail modal with image gallery, features, and reviews.</p>
+<p><strong>Export:</strong> <code>window.showPropertyModal(property)</code></p>
+<p><strong>Features:</strong> Image gallery with thumbnail navigation, price/location/details display, feature tags, contact/schedule buttons, similar properties section, reviews integration with <code>reviews.js</code>, keyboard escape to close.</p>
+<p><strong>Called by:</strong> <code>index-search.js</code> on property card click</p>
+
+<h4>compare.js <span class="tag tag-frontend">compare</span> (170 lines)</h4>
+<p><strong>Role:</strong> Property comparison tool — up to 3 side-by-side.</p>
+<p><strong>Export:</strong> <code>window.addToCompare()</code>, <code>window.removeFromCompare()</code>, <code>window.showCompareModal()</code></p>
+<p><strong>Features:</strong> Floating compare bar at bottom, max 3 items, comparison table with all fields, auto-hide when empty.</p>
+
+<h4>reviews.js <span class="tag tag-frontend">reviews</span> (234 lines)</h4>
+<p><strong>Role:</strong> User reviews and ratings system, persisted to localStorage.</p>
+<p><strong>Export:</strong> <code>window.getReviews()</code>, <code>window.addReview()</code>, <code>window.renderReviewsSection()</code></p>
+<p><strong>Features:</strong> Star rating picker with hover effect, review CRUD, average rating calculation.</p>
+<p><strong>Called by:</strong> <code>modal.js</code> when viewing property details</p>
+
+<!-- 2.5 HTML Pages -->
+<h3 id="pages">2.5 HTML Pages</h3>
+
+<h4>index.html <span class="tag tag-html">page</span> (723 lines)</h4>
+<p><strong>Role:</strong> Landing page / homepage — the primary entry point.</p>
+<p><strong>Sections:</strong> Hero (animated search box with Buy/Rent/Commercial tabs, stats row) → Trust badges → Owner/Admin tool cards (conditional) → Feature cards → Property type tabs + advanced filters + searchable grid → Stats counter → Testimonials → Mortgage calculator → About section → Contact form → Footer + Compare bar.</p>
+<p><strong>Scripts (load order):</strong> config.js → modal.js → compare.js → reviews.js → motion.js → script.js → index-search.js → auth.js</p>
+<p><strong>Auth:</strong> Inline script checks token on load, fetches /api/auth/me, conditionally reveals owner/admin tools.</p>
+
+<h4>search.html <span class="tag tag-html">page</span> (375 lines)</h4>
+<p><strong>Role:</strong> Dedicated property search page with full filter panel.</p>
+<p><strong>Key difference from index.html:</strong> Focused on search — no testimonials, calculator, about, or contact sections. Has bedroom, bathroom, and category filters that index.html lacks.</p>
+
+<h4>login.html <span class="tag tag-html">auth</span> (165 lines)</h4>
+<p><strong>Role:</strong> User login with role pill selector (User/Owner/Admin).</p>
+<p><strong>Flow:</strong> Client-side validation → POST /api/auth/login → store token → redirect to index.html.</p>
+
+<h4>signup.html <span class="tag tag-html">auth</span> (192 lines)</h4>
+<p><strong>Role:</strong> User registration with role selection.</p>
+<p><strong>Flow:</strong> Validate name/email/password (client + server) → POST /api/auth/signup → store token → redirect to index.html.</p>
+<p><strong>Security:</strong> Server rejects passwords without uppercase, lowercase, and digit (min 8 chars).</p>
+
+<h4>admin-dashboard.html <span class="tag tag-html">dashboard</span> (317 lines)</h4>
+<p><strong>Role:</strong> Admin panel — manage all users and properties.</p>
+<p><strong>Features:</strong> Users table (load from /api/admin/users), property editor with form, property grid with Edit/Delete. Protected by /api/protected/admin.</p>
+
+<h4>owner-dashboard.html <span class="tag tag-html">dashboard</span> (361 lines)</h4>
+<p><strong>Role:</strong> Property owner dashboard — full CRUD for own listings.</p>
+<p><strong>Features:</strong> Create/Read/Update/Delete via /api/owner/properties. Supports image URLs, features, multiple images. Ownership verified server-side.</p>
+
+<h4>user-dashboard.html <span class="tag tag-html">dashboard</span> (192 lines)</h4>
+<p><strong>Role:</strong> Basic user dashboard with property search.</p>
+<p><strong>Features:</strong> Search bar + results grid from /api/properties.</p>
+
+<h4>profile.html <span class="tag tag-html">page</span> (371 lines)</h4>
+<p><strong>Role:</strong> User profile page — adapts to role (user/owner/admin).</p>
+<p><strong>Features:</strong> Profile header with avatar initials, info grid, role-specific stats, quick action cards, recent activity.</p>
+
+<h4>about.html <span class="tag tag-html">page</span> (292 lines)</h4>
+<p><strong>Role:</strong> Company information page with hero, story, values, team, stats.</p>
+
+<h4>privacy.html <span class="tag tag-html">legal</span> (181 lines)</h4>
+<p><strong>Role:</strong> Privacy policy page with 9 standard policy sections.</p>
+
+<h4>terms.html <span class="tag tag-html">legal</span> (175 lines)</h4>
+<p><strong>Role:</strong> Terms of Service page with 11 sections.</p>
+
+<!-- 2.6 Stylesheet -->
+<h3 id="css">2.6 Stylesheet</h3>
+
+<h4>css/style.css <span class="tag tag-html">style</span> (3804 lines)</h4>
+<p><strong>Role:</strong> Single comprehensive stylesheet for the entire application. No CSS framework used.</p>
+<table>
+  <tr><th>Section</th><th>Lines</th><th>Content</th></tr>
+  <tr><td>Reset + Base</td><td>1-21</td><td>Box-sizing, body defaults</td></tr>
+  <tr><td>CSS Variables</td><td>26-73</td><td>Dark theme colors, gradients, shadows</td></tr>
+  <tr><td>Header/Nav</td><td>75-157</td><td>Nav bar, mobile menu, user badge</td></tr>
+  <tr><td>Hero (legacy)</td><td>159-248</td><td>Original hero section</td></tr>
+  <tr><td>Features</td><td>250-309</td><td>Service cards</td></tr>
+  <tr><td>Properties grid</td><td>311-401</td><td>Card layout, badges, price tags</td></tr>
+  <tr><td>Auth pages</td><td>619-704</td><td>Login/signup cards, role pills, form inputs</td></tr>
+  <tr><td>Animations</td><td>706-775</td><td>fadeInUp, slideIn, scaleIn keyframes</td></tr>
+  <tr><td>Modal</td><td>777-937</td><td>Property detail modal with gallery</td></tr>
+  <tr><td>Filter section</td><td>1031-1078</td><td>Collapsible advanced filters</td></tr>
+  <tr><td>Responsive (768px)</td><td>1181-1348</td><td>Tablet breakpoint</td></tr>
+  <tr><td>Responsive (480px)</td><td>1350-1391</td><td>Phone breakpoint</td></tr>
+  <tr><td>Extended animations</td><td>1393-1896</td><td>Page reveal, hero float, gradient text, scroll reveals, card hover, ripple</td></tr>
+  <tr><td>Motion Engine CSS</td><td>1898-2058</td><td>Custom cursor, progress bar, card entrance, text reveal, transition, icon float</td></tr>
+  <tr><td>Modern property styles</td><td>2195-3637</td><td>Hero modern, search box, trust badges, feature cards, property tabs, filters modern, cards modern, stats, testimonials, mortgage, about, footer, compare bar</td></tr>
+  <tr><td>Responsive (1024/768/480)</td><td>3641-3804</td><td>Modern section responsive breakpoints</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<!-- 3. SECURITY & DEPLOYMENT -->
+<h2 id="sec">3. Security &amp; Deployment</h2>
+
+<h3>Security Hardening Applied</h3>
+<table>
+  <tr><th>Measure</th><th>Detail</th></tr>
+  <tr><td>Helmet</td><td>15+ HTTP security headers (CSP, XSS filter, no-sniff, HSTS, etc.)</td></tr>
+  <tr><td>Rate limiting</td><td>Auth: 20 requests/15 min. General API: 200 req/15 min</td></tr>
+  <tr><td>CORS</td><td>Configurable via <code>CORS_ORIGIN</code> env var (open in dev, locked in prod)</td></tr>
+  <tr><td>Input sanitization</td><td>All user text inputs stripped of <code>&lt;&gt;"'&amp;</code></td></tr>
+  <tr><td>Price sanitization</td><td>Non-numeric characters stripped from price fields</td></tr>
+  <tr><td>Password strength</td><td>Min 8 chars + uppercase + lowercase + digit</td></tr>
+  <tr><td>bcrypt cost</td><td>12 rounds (increased from original 10)</td></tr>
+  <tr><td>JWT guard</td><td>Server refuses to start with default secret in NODE_ENV=production</td></tr>
+  <tr><td>Error handler</td><td>No stack traces leaked in production</td></tr>
+  <tr><td>JSON body limit</td><td>Payload capped at 1MB</td></tr>
+  <tr><td>Signup role</td><td>Restricted to <code>user</code>/<code>owner</code> — no public admin registration</td></tr>
+  <tr><td>Git ignore</td><td><code>backend/data/</code>, <code>.env</code>, <code>node_modules/</code> excluded from version control</td></tr>
+  <tr><td>Data removed from git</td><td><code>users.json</code> (password hashes) and <code>properties.json</code> removed from git tracking</td></tr>
+</table>
+
+<h3>Production Deployment Checklist</h3>
+<ol>
+  <li><strong>Generate a strong JWT secret:</strong> <code>node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"</code></li>
+  <li><strong>Set environment variables:</strong> Copy <code>.env.example</code> → <code>.env</code> and fill in production values:
+    <ul>
+      <li><code>JWT_SECRET</code> = the generated secret</li>
+      <li><code>CORS_ORIGIN</code> = your frontend domain (e.g., <code>https://requify.com</code>)</li>
+      <li><code>NODE_ENV</code> = <code>production</code></li>
+      <li><code>PORT</code> = your server port</li>
+    </ul>
+  </li>
+  <li><strong>Upgrade storage:</strong> Replace JSON-file I/O with a database (MongoDB/PostgreSQL) for concurrent access safety</li>
+  <li><strong>Enable HTTPS:</strong> Use a reverse proxy (nginx, Caddy) or a service like Cloudflare</li>
+  <li><strong>Run with process manager:</strong> Use PM2 or systemd to keep the server alive</li>
+  <li><strong>Configure <code>config.js</code>:</strong> Update <code>BASE_URL</code> to your production API domain</li>
+</ol>
+
+<h3>Alternative: Host for Free</h3>
+<div class="info-box">
+  <strong>Render.com (recommended for this stack):</strong> Connect your GitHub repo, set the build command to <code>npm install</code>, start command to <code>node backend/server.js</code>. Set environment variables in the dashboard. Free tier includes auto-deploy from GitHub, HTTPS, and 512MB RAM.
+</div>
+
+<p style="text-align:center;margin-top:60px;padding-top:30px;border-top:1px solid #e2e8f0;color:#94a3b8;font-size:0.85rem;">
+  Requify Project Documentation — July 2026<br>
+  Generated from C:\Users\Sachin\OneDrive\Attachments\OneDrive\Documents\Project Showcase Web Development
+</p>
+
+</div>
+</body>
+</html>

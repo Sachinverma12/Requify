@@ -3,26 +3,59 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Requify</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#0a0a0f">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Requify - Find Your Dream Home | Real Estate Platform</title>
+    <meta name="description" content="Discover the best properties in your area with Requify. Find apartments, villas, plots and commercial spaces for sale and rent.">
+    <meta name="keywords" content="real estate, property, apartment, villa, house, rent, sale, buy, Mumbai">
+    <meta name="author" content="Requify">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://requify.com/">
+    <meta property="og:title" content="Requify - Find Your Dream Home">
+    <meta property="og:description" content="Discover the best properties in your area with Requify.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://requify.com/">
+    <meta property="twitter:title" content="Requify - Find Your Dream Home">
+    <meta property="twitter:description" content="Discover the best properties in your area with Requify.">
+    <meta property="twitter:image" content="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="canonical" href="https://requify.com/">
 </head>
 
 <body>
 
+    <!-- Header -->
     <header id="header">
         <nav class="container">
-            <h1 class="logo">Requify</h1>
+            <div class="logo-wrap">
+                <div class="logo-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <h1 class="logo">Requify</h1>
+            </div>
             <ul class="nav-links" id="navLinks">
-                <li><a href="#Home">Home</a></li>
-                <li><a href="#Properties">Properties</a></li>
+                <li><a href="#Home" class="nav-active">Home</a></li>
+                <li><a href="./search.html">Search</a></li>
+                <li><a href="#properties">Properties</a></li>
                 <li><a href="#Services">Services</a></li>
                 <li><a href="#About">About</a></li>
                 <li><a href="#Contact">Contact</a></li>
             </ul>
 
-            <a href="./login.html" class="cta-btn">Get Started</a>
+            <div id="authNav" class="nav-auth">
+                <a href="./login.html" class="nav-cta">Get Started</a>
+            </div>
 
             <div class="mobile-menu-btn" id="mobileMenuBtn">
                 <span></span>
@@ -33,137 +66,490 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="hero" id="Home">
-        <div class="hero-content">
-            <h1>Find Your Dream Home</h1>
-            <p>Discover the best properties in your area with Requify. We help you find the perfect home that fits your
-                lifestyle and budget.</p>
-            <div class="hero-buttons">
-                <a href="#Properties" class="btn-primary">Explore Properties</a>
-                <a href="#Contact" class="btn-secondary">Contact Us</a>
+    <section class="hero-modern" id="Home">
+        <div class="hero-bg-pattern"></div>
+        <div class="hero-content-modern">
+            <span class="hero-badge">Premium Real Estate Platform</span>
+            <h1 class="hero-title">Find Your <span class="gradient-text">Dream Home</span></h1>
+            <p class="hero-subtitle">Discover 5,000+ premium properties across India. Your perfect home is just a search away.</p>
+            
+            <div class="hero-search-box">
+                <div class="search-tabs">
+                    <button class="search-tab active" data-tab="buy">Buy</button>
+                    <button class="search-tab" data-tab="rent">Rent</button>
+                    <button class="search-tab" data-tab="commercial">Commercial</button>
+                </div>
+                <div class="search-fields">
+                    <div class="sf-input">
+                        <i class="fas fa-search"></i>
+                        <input id="indexSearchInput" type="text" placeholder="Search by city, locality or project..." />
+                    </div>
+                    <div class="sf-select">
+                        <select id="filterTypeHero">
+                            <option value="">Property Type</option>
+                            <option value="apartment">Apartment</option>
+                            <option value="villa">Villa</option>
+                            <option value="house">Independent House</option>
+                            <option value="plot">Plot</option>
+                            <option value="commercial">Commercial</option>
+                            <option value="penthouse">Penthouse</option>
+                        </select>
+                    </div>
+                    <div class="sf-select">
+                        <select id="filterBudgetHero">
+                            <option value="">Budget</option>
+                            <option value="500000">Under ₹5 Lakh</option>
+                            <option value="1000000">Under ₹10 Lakh</option>
+                            <option value="5000000">Under ₹50 Lakh</option>
+                            <option value="10000000">Under ₹1 Crore</option>
+                            <option value="50000000">Under ₹5 Crore</option>
+                            <option value="100000000">₹10 Crore+</option>
+                        </select>
+                    </div>
+                    <button id="heroSearchBtn" class="hero-search-btn">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </div>
+
+            <div class="hero-stats-row">
+                <div class="hero-stat">
+                    <span class="hero-stat-num">5,000+</span>
+                    <span class="hero-stat-label">Properties</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-num">2,500+</span>
+                    <span class="hero-stat-label">Happy Clients</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-num">150+</span>
+                    <span class="hero-stat-label">Cities</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-num">4.9★</span>
+                    <span class="hero-stat-label">Avg Rating</span>
+                </div>
             </div>
         </div>
     </section>
 
+    <!-- Trust Badges -->
+    <section class="trust-badges">
+        <div class="container">
+            <p class="trust-label">Trusted by leading companies nationwide</p>
+            <div class="trust-grid">
+                <div class="trust-item"><i class="fas fa-building"></i> BuildCorp</div>
+                <div class="trust-item"><i class="fas fa-city"></i> MetroHomes</div>
+                <div class="trust-item"><i class="fas fa-hotel"></i> PrimeEstate</div>
+                <div class="trust-item"><i class="fas fa-industry"></i> UrbanSpaces</div>
+                <div class="trust-item"><i class="fas fa-home"></i> DreamLiving</div>
+                <div class="trust-item"><i class="fas fa-archway"></i> Skyline</div>
+            </div>
+        </div>
+    </section>
 
-    <!-- Feature Section -->
+    <!-- Owner Tools Section -->
+    <section class="owner-tools-section" id="ownerTools" style="display:none;">
+        <div class="container">
+            <div class="tools-header">
+                <i class="fas fa-tachometer-alt"></i>
+                <h2>Owner Dashboard</h2>
+            </div>
+            <p class="tools-desc">Manage your property listings directly from here</p>
+            <div class="tools-grid">
+                <a href="./owner-dashboard.html" class="tool-card">
+                    <i class="fas fa-plus-circle"></i>
+                    <h3>Add Property</h3>
+                    <p>List a new property for sale or rent</p>
+                </a>
+                <a href="./owner-dashboard.html" class="tool-card">
+                    <i class="fas fa-edit"></i>
+                    <h3>Manage Listings</h3>
+                    <p>Edit or update your existing properties</p>
+                </a>
+                <a href="#properties" class="tool-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>View Listings</h3>
+                    <p>See how your properties appear to buyers</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Tools Section -->
+    <section class="admin-tools-section" id="adminTools" style="display:none;">
+        <div class="container">
+            <div class="tools-header">
+                <i class="fas fa-crown"></i>
+                <h2>Admin Panel</h2>
+            </div>
+            <p class="tools-desc">Manage your platform from here</p>
+            <div class="tools-grid">
+                <a href="./admin-dashboard.html" class="tool-card">
+                    <i class="fas fa-users-cog"></i>
+                    <h3>Manage Users</h3>
+                    <p>View and manage all users</p>
+                </a>
+                <a href="./admin-dashboard.html" class="tool-card">
+                    <i class="fas fa-building"></i>
+                    <h3>All Properties</h3>
+                    <p>Moderate all property listings</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features / Services -->
     <section class="features" id="Services">
         <div class="container">
-            <h2 class="section-title fade-in">Why Choose Requify</h2>
-            <div class="feature-grid">
-                <div class="feature-card fade-in">
-                    <i class="fas fa-search feature-icon"></i>
-                    <h3>Advance Search</h3>
-                    <p>Find properties that match your criteria with our advanced search tools.</p>
+            <div class="section-header">
+                <span class="section-badge">Why Choose Us</span>
+                <h2 class="section-title-modern">Everything You Need to Find the Perfect Home</h2>
+                <p class="section-desc">We combine innovative technology with expert guidance to make your property journey seamless.</p>
+            </div>
+            <div class="feature-grid-modern">
+                <div class="feature-card-modern" data-parallax="0.1">
+                    <div class="fm-icon"><i class="fas fa-search"></i></div>
+                    <h3>Smart Search</h3>
+                    <p>AI-powered search with intelligent filters to find properties that match your exact needs.</p>
                 </div>
-                <div class="feature-card fade-in">
-                    <i class="fas fa-handshake feature-icon"></i>
-                    <h3>Expert Guidance</h3>
-                    <p>Get personalized assistance from our team of real estate experts.</p>
+                <div class="feature-card-modern" data-parallax="0.15">
+                    <div class="fm-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Verified Properties</h3>
+                    <p>Every listing is verified for authenticity with detailed property documentation.</p>
                 </div>
-                <div class="feature-card fade-in">
-                    <i class="fas fa-search feature-icon"></i>
-                    <h3>Secure Transactions</h3>
-                    <p>Enjoy peace of mind with our secure and transparent transaction process.</p>
+                <div class="feature-card-modern" data-parallax="0.2">
+                    <div class="fm-icon"><i class="fas fa-hand-holding-usd"></i></div>
+                    <h3>Best Deals</h3>
+                    <p>Get the best market prices with transparent pricing and zero hidden charges.</p>
+                </div>
+                <div class="feature-card-modern" data-parallax="0.25">
+                    <div class="fm-icon"><i class="fas fa-headset"></i></div>
+                    <h3>24/7 Support</h3>
+                    <p>Dedicated relationship managers available round the clock for all your queries.</p>
                 </div>
             </div>
+        </div>
     </section>
 
     <!-- Properties Section -->
     <section class="properties" id="properties">
         <div class="container">
-            <h2 class="section-title fade-in">Properties</h2>
+            <div class="section-header">
+                <span class="section-badge">Explore Properties</span>
+                <h2 class="section-title-modern">Featured Listings</h2>
+                <p class="section-desc">Hand-picked properties that match your lifestyle and budget</p>
+            </div>
 
-            <div style="max-width: 820px; margin: 0 auto 2.25rem;">
-                <div style="display:flex; gap:12px; align-items:center; flex-wrap: wrap; justify-content:center;">
-                    <input id="indexSearchInput" type="text" placeholder="Search by title, location, category..."
-                        style="flex:1; min-width: 260px; padding: 0.95rem 1rem; border: 2px solid #e9ecef; border-radius: 10px; font-size: 1rem;" />
-                    <button id="indexSearchBtn" class="cta-btn" style="border:none; cursor:pointer; padding: 0.95rem 1.3rem;">Search</button>
-                    <button id="indexSearchClear" class="cta-btn" style="border:none; cursor:pointer; background:#fff; color:#2c5aa0; border: 2px solid rgba(44,90,160,0.25); padding: 0.95rem 1.3rem;">Clear</button>
+            <!-- Property Type Tabs -->
+            <div class="prop-tabs">
+                <button class="prop-tab active" data-type="all">All</button>
+                <button class="prop-tab" data-type="apartment">Apartments</button>
+                <button class="prop-tab" data-type="villa">Villas</button>
+                <button class="prop-tab" data-type="house">Houses</button>
+                <button class="prop-tab" data-type="plot">Plots</button>
+            </div>
+
+            <!-- Advanced Filters -->
+            <div class="filter-section fade-in">
+                <div class="filter-header" id="filterToggle">
+                    <i class="fas fa-sliders-h"></i>
+                    <span>Advanced Filters</span>
+                    <i class="fas fa-chevron-down filter-arrow"></i>
                 </div>
-                <div id="indexAuthTip" style="margin-top: 0.75rem; text-align:center; color:#666; font-size: 0.95rem;">
-                    Search requires login.
+                <div class="filter-body" id="filterBody">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="filterLocation">Location</label>
+                            <input type="text" id="filterLocation" placeholder="Search by city, area..." />
+                        </div>
+                        <div class="filter-group">
+                            <label for="filterType">Property Type</label>
+                            <select id="filterType">
+                                <option value="">All Types</option>
+                                <option value="apartment">Apartment</option>
+                                <option value="villa">Villa</option>
+                                <option value="house">Independent House</option>
+                                <option value="plot">Plot</option>
+                                <option value="commercial">Commercial</option>
+                                <option value="penthouse">Penthouse</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filterPriceMin">Min Price</label>
+                            <select id="filterPriceMin">
+                                <option value="">No Min</option>
+                                <option value="500000">₹5 Lakh</option>
+                                <option value="1000000">₹10 Lakh</option>
+                                <option value="2000000">₹20 Lakh</option>
+                                <option value="5000000">₹50 Lakh</option>
+                                <option value="10000000">₹1 Crore</option>
+                                <option value="20000000">₹2 Crore</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filterPriceMax">Max Price</label>
+                            <select id="filterPriceMax">
+                                <option value="">No Max</option>
+                                <option value="1000000">₹10 Lakh</option>
+                                <option value="2000000">₹20 Lakh</option>
+                                <option value="5000000">₹50 Lakh</option>
+                                <option value="10000000">₹1 Crore</option>
+                                <option value="20000000">₹2 Crore</option>
+                                <option value="50000000">₹5 Crore</option>
+                                <option value="100000000">₹10 Crore</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filterSort">Sort By</label>
+                            <select id="filterSort">
+                                <option value="newest">Newest First</option>
+                                <option value="oldest">Oldest First</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-actions">
+                        <button id="indexSearchBtn" class="filter-apply">
+                            <i class="fas fa-filter"></i> Apply Filters
+                        </button>
+                        <button id="indexSearchClear" class="filter-clear">
+                            <i class="fas fa-times"></i> Clear All
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div style="text-align:center; margin-bottom: 1rem;">
-                <div id="indexPropertiesCount" style="color:#666; font-weight:600;">0 properties</div>
+            <!-- Search & Results -->
+            <div class="search-bar-modern">
+                <div class="sbm-inner">
+                    <i class="fas fa-search"></i>
+                    <input id="indexSearchInput2" type="text" placeholder="Search by title, location, category..." />
+                </div>
             </div>
 
-            <div id="indexPropertiesError" style="display:none; text-align:center; margin: 0.75rem 0; color:#b42318; font-weight:600;"></div>
-            <div id="indexPropertiesEmpty" class="empty" style="display:none; text-align:center; margin: 1rem 0;">No properties found.</div>
+            <div id="indexAuthTip" class="auth-tip">
+                Please <a href="./login.html">login</a> to search real listings.
+            </div>
 
+            <div class="results-header">
+                <div id="indexPropertiesCount" class="results-count">0 properties</div>
+                <div class="results-actions">
+                    <button id="indexGridView" class="view-btn active"><i class="fas fa-th"></i></button>
+                    <button id="indexListView" class="view-btn"><i class="fas fa-list"></i></button>
+                </div>
+            </div>
 
-            <div class="properties-grid" id="indexPropertiesGrid"></div>
+            <div id="indexPropertiesError" class="results-error"></div>
+            <div id="indexPropertiesEmpty" class="results-empty">No properties found. Try adjusting your filters.</div>
 
+            <div class="properties-grid-modern" id="indexPropertiesGrid"></div>
         </div>
     </section>
 
-    <div style="display:none" aria-hidden="true"></div>
-
-
-    <!--Stats Section-->
-
-
+    <!-- Stats -->
     <section class="stats">
         <div class="container">
-            <div class="stats-grid">
-                <div class="stat-card fade-in">
-                    <h3 id="propertiesSold">500+</h3>
+            <div class="stats-grid-modern">
+                <div class="stat-card-modern">
+                    <i class="fas fa-home"></i>
+                    <h3 id="propertiesSold">0</h3>
                     <p>Properties Sold</p>
                 </div>
-                <div class="stat-card fade-in">
-                    <h3 id="happyClients">300+</h3>
+                <div class="stat-card-modern">
+                    <i class="fas fa-smile"></i>
+                    <h3 id="happyClients">0</h3>
                     <p>Happy Clients</p>
                 </div>
-                <div class="stat-card fade-in">
-                    <h3 id="yearsExperience">10+</h3>
+                <div class="stat-card-modern">
+                    <i class="fas fa-calendar-check"></i>
+                    <h3 id="yearsExperience">0</h3>
                     <p>Years of Experience</p>
                 </div>
-                <div class="stat-card fade-in">
-                    <h3 id="awardsWon">15</h3>
+                <div class="stat-card-modern">
+                    <i class="fas fa-award"></i>
+                    <h3 id="awards">0</h3>
                     <p>Awards Won</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!--Contact Section-->
-    <section class="contact" id="Contact">
+    <!-- Testimonials -->
+    <section class="testimonials">
         <div class="container">
-            <h2 class="section-title fade-in">Get in Touch</h2>
-            <div class="contact-content">
-                <div class="contact-info fade-in">
-                    <div class="contact-item">
-                        <i class="fas fa-phone contact-icon"></i>
+            <div class="section-header">
+                <span class="section-badge">Testimonials</span>
+                <h2 class="section-title-modern">What Our Clients Say</h2>
+                <p class="section-desc">Real stories from real clients who found their dream homes with Requify</p>
+            </div>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="t-stars">★★★★★</div>
+                    <p class="t-text">"Requify made buying our first home incredibly smooth. The team guided us through every step and found the perfect property within our budget."</p>
+                    <div class="t-author">
+                        <div class="t-avatar" style="background:var(--gradient-primary);">RK</div>
                         <div>
-                            <h4>Phone</h4>
-                            <p>+91 123 456 7890</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-map-marker-alt contact-icon"></i>
-                        <div>
-                            <h4>Office</h4>
-                            <p>Mumbai East, gora gao east</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-envelope contact-icon"></i>
-                        <div>
-                            <h4>Email</h4>
-                            <p>Requify004@gmail.com</p>
+                            <h4>Rahul Kapoor</h4>
+                            <span>Home Buyer, Mumbai</span>
                         </div>
                     </div>
                 </div>
-                <form class="contact-form fade-in" id="contactForm" autoComplete="off">
-                    <div class="form-group">
-                        <label for="name">Full Name</label>
-                        <input type="text" id="name" name="name" required>
+                <div class="testimonial-card">
+                    <div class="t-stars">★★★★★</div>
+                    <p class="t-text">"I sold my property within a week of listing on Requify. The platform's reach and the team's professionalism exceeded my expectations."</p>
+                    <div class="t-author">
+                        <div class="t-avatar" style="background:var(--gradient-accent);">PS</div>
+                        <div>
+                            <h4>Priya Sharma</h4>
+                            <span>Property Seller, Delhi</span>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" required>
+                </div>
+                <div class="testimonial-card">
+                    <div class="t-stars">★★★★★</div>
+                    <p class="t-text">"The rental process was seamless. Found a great apartment in Bangalore within days. The verified listings saved us from countless scams."</p>
+                    <div class="t-author">
+                        <div class="t-avatar" style="background:var(--secondary);">AM</div>
+                        <div>
+                            <h4>Arjun Mehta</h4>
+                            <span>Renter, Bangalore</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mortgage Calculator -->
+    <section class="mortgage-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Financial Tools</span>
+                <h2 class="section-title-modern">Mortgage Calculator</h2>
+                <p class="section-desc">Calculate your home loan EMI instantly and plan your budget</p>
+            </div>
+            <div class="mortgage-wrapper">
+                <div class="mortgage-calculator fade-in">
+                    <div class="filter-group">
+                        <label for="loanAmount">Loan Amount (₹)</label>
+                        <input type="number" id="loanAmount" placeholder="e.g. 5000000" value="5000000" />
+                    </div>
+                    <div class="mortgage-row">
+                        <div class="filter-group">
+                            <label for="interestRate">Interest Rate (% p.a.)</label>
+                            <input type="number" id="interestRate" placeholder="e.g. 8.5" value="8.5" step="0.1" />
+                        </div>
+                        <div class="filter-group">
+                            <label for="loanTenure">Loan Tenure (Years)</label>
+                            <input type="number" id="loanTenure" placeholder="e.g. 20" value="20" />
+                        </div>
+                    </div>
+                    <button onclick="calculateEMI()" class="submit-btn">
+                        <i class="fas fa-calculator"></i> Calculate EMI
+                    </button>
+                    <div id="emiResult">
+                        <div class="calc-result">
+                            <div class="label">Monthly EMI</div>
+                            <div class="monthly" id="emiAmount">₹0</div>
+                        </div>
+                        <div class="calc-breakdown">
+                            <div class="calc-item">
+                                <span class="calc-label">Total Interest</span>
+                                <span class="calc-value" id="totalInterest" style="color:var(--error);">₹0</span>
+                            </div>
+                            <div class="calc-item">
+                                <span class="calc-label">Total Payment</span>
+                                <span class="calc-value" id="totalPayment" style="color:var(--primary);">₹0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section-home" id="About">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-image-wrap" data-parallax="0.1">
+                    <div class="about-image-card">
+                        <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80" alt="About Requify" />
+                    </div>
+                    <div class="about-experience-badge">
+                        <span class="aeb-num">10+</span>
+                        <span class="aeb-label">Years<br/>Experience</span>
+                    </div>
+                </div>
+                <div class="about-content">
+                    <span class="section-badge">About Us</span>
+                    <h2 class="section-title-modern">Your Trusted Real Estate Partner</h2>
+                    <p class="about-text">
+                        Founded in 2024, Requify started with a simple idea: everyone deserves to find their perfect home without the stress and complexity traditionally associated with real estate.
+                    </p>
+                    <p class="about-text">
+                        We combine cutting-edge technology with expert human guidance to create a seamless property search experience.
+                    </p>
+                    <div class="about-stats-row">
+                        <div class="about-stat">
+                            <span class="as-num">500+</span>
+                            <span class="as-label">Properties Sold</span>
+                        </div>
+                        <div class="about-stat">
+                            <span class="as-num">300+</span>
+                            <span class="as-label">Happy Clients</span>
+                        </div>
+                        <div class="about-stat">
+                            <span class="as-num">98%</span>
+                            <span class="as-label">Satisfaction</span>
+                        </div>
+                    </div>
+                    <a href="./about.html" class="about-cta">
+                        Learn More About Us <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="Contact">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Get in Touch</span>
+                <h2 class="section-title-modern">Have a Question?</h2>
+                <p class="section-desc">Our team is ready to help you find your perfect property</p>
+            </div>
+            <div class="contact-grid-modern">
+                <div class="contact-cards">
+                    <div class="contact-card">
+                        <div class="cc-icon"><i class="fas fa-phone"></i></div>
+                        <h4>Phone</h4>
+                        <p>+91 123 456 7890</p>
+                    </div>
+                    <div class="contact-card">
+                        <div class="cc-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <h4>Office</h4>
+                        <p>Mumbai East, gora gao east</p>
+                    </div>
+                    <div class="contact-card">
+                        <div class="cc-icon"><i class="fas fa-envelope"></i></div>
+                        <h4>Email</h4>
+                        <p>Requify004@gmail.com</p>
+                    </div>
+                </div>
+                <form class="contact-form-modern" id="contactForm" autoComplete="off">
+                    <div class="cf-row">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="Phone">Phone Number</label>
@@ -171,77 +557,167 @@
                     </div>
                     <div class="form-group">
                         <label for="message">Message</label>
-                        <textarea id="message" name="message" rows="5" placeholder="Enter your message here... "
-                            required></textarea>
+                        <textarea id="message" name="message" rows="4" placeholder="Enter your message here..." required></textarea>
                     </div>
-                    <button type="submit" class="submit-btn">Send Message</button>
+                    <button type="submit" class="submit-btn">Send Message <i class="fas fa-paper-plane"></i></button>
                 </form>
             </div>
         </div>
     </section>
 
-    <!-- Footer Section -->
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Requify</h3>
-                    <p>Your trusted partners in finding the perfect home. We provides exceptional estates services with
-                        a focus on quality, and custom satisfaction </p>
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo-wrap" style="margin-bottom:1rem;">
+                        <div class="logo-icon"><i class="fas fa-home"></i></div>
+                        <h3 style="font-size:1.5rem; font-weight:800; background:var(--gradient-primary); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Requify</h3>
+                    </div>
+                    <p>Your trusted partner in finding the perfect home. We provide exceptional real estate services with a focus on quality and customer satisfaction.</p>
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
-
-                <div class="footer-section">
-                    <h3>Quick Links</h3>
-                    <p><a href="#home">Home</a></p>
-                    <p><a href="#properties">Properties</a></p>
-                    <p><a href="#Services">Services</a></p>
-                    <p><a href="#about">About</a></p>
-                    <p><a href="#contact">Contact</a></p>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <a href="#Home">Home</a>
+                    <a href="#properties">Properties</a>
+                    <a href="./search.html">Search Properties</a>
+                    <a href="#Services">Services</a>
+                    <a href="#About">About</a>
+                    <a href="#Contact">Contact</a>
                 </div>
-
-
-                <div class="footer-section">
-                    <h3>Services</h3>
-                    <p><a href="#">Property Sales</a></p>
-                    <p><a href="#">Property Rentals</a></p>
-                    <p><a href="#">Property Management</a></p>
-                    <p><a href="#">Investment Advisory</a></p>
-                    <p><a href="#">Market Analysis</a></p>
+                <div class="footer-links">
+                    <h4>Property Types</h4>
+                    <a href="./search.html?type=apartment">Apartments</a>
+                    <a href="./search.html?type=villa">Villas</a>
+                    <a href="./search.html?type=house">Houses</a>
+                    <a href="./search.html?type=plot">Plots</a>
+                    <a href="./search.html?type=commercial">Commercial</a>
                 </div>
-
-
-
-                <div class="footer-section">
-                    <h3>Contact Info</h3>
-                    <p><i class="fas fa-map-marker-alt"></i> 123 Main Street, Mumbai City</p>
-                    <p><i class="fas fa-phone"></i> (123) 456-7890</p>
-                    <p><i class="fas fa-envelope"></i> info@requify.com</p>
-                    <p>Some City</p>
+                <div class="footer-links">
+                    <h4>Services</h4>
+                    <a href="#">Property Sales</a>
+                    <a href="#">Property Rentals</a>
+                    <a href="#">Property Management</a>
+                    <a href="#">Investment Advisory</a>
+                    <a href="#">Market Analysis</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Contact Info</h4>
+                    <a href="#"><i class="fas fa-map-marker-alt"></i> 123 Main Street, Mumbai City</a>
+                    <a href="#"><i class="fas fa-phone"></i> +91 123 456 7890</a>
+                    <a href="#"><i class="fas fa-envelope"></i> info@requify.com</a>
                 </div>
             </div>
-
             <div class="footer-bottom">
-                <p>&copy; 2024 Requify. All rights reserved. | Privacy Policy | Term of Services</p>
+                <p>&copy; 2024 Requify. All rights reserved. | <a href="./privacy.html">Privacy Policy</a> | <a href="./terms.html">Terms of Service</a> | <a href="./about.html">About Us</a></p>
             </div>
-
         </div>
     </footer>
 
+    <!-- Compare Bar -->
+    <div id="compareBar" class="compare-bar">
+        <div class="container compare-bar-inner">
+            <div class="compare-bar-left">
+                <span class="compare-bar-title">
+                    <i class="fas fa-balance-scale"></i> Compare Properties (<span id="compareCount">0</span>/3)
+                </span>
+                <div id="compareItems" class="compare-items"></div>
+            </div>
+            <div class="compare-bar-right">
+                <button onclick="showCompareModal()" class="compare-btn-action">
+                    <i class="fas fa-chart-bar"></i> Compare Now
+                </button>
+                <button onclick="clearCompare()" class="compare-btn-clear">
+                    <i class="fas fa-times"></i> Clear
+                </button>
+            </div>
+        </div>
+    </div>
 
+    <!-- Compare Item Style -->
+    <style>
+      .compare-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--primary-50);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        color: var(--primary);
+        border: 1px solid rgba(99, 102, 241, 0.2);
+      }
+      .compare-remove {
+        background: none;
+        border: none;
+        color: var(--error);
+        cursor: pointer;
+        font-size: 1.1rem;
+        padding: 0;
+        line-height: 1;
+      }
+      .compare-remove:hover {
+        transform: scale(1.2);
+      }
+    </style>
 
-
-
-
+    <script src="config.js"></script>
+    <script src="modal.js"></script>
+    <script src="compare.js"></script>
+    <script src="reviews.js"></script>
+    <script src="motion.js"></script>
     <script src="script.js"></script>
     <script src="./index-search.js"></script>
+    <script src="./auth.js"></script>
+    <script>
+    (function() {
+      const token = localStorage.getItem('token');
+      const authNav = document.getElementById('authNav');
+      const ownerTools = document.getElementById('ownerTools');
+      const adminTools = document.getElementById('adminTools');
+
+      if (token) {
+        fetch((window.API_CONFIG?.BASE_URL || 'http://localhost:5000') + '/api/auth/me', {
+          headers: { Authorization: 'Bearer ' + token }
+        })
+        .then(r => r.json())
+        .then(data => {
+          if (data.user) {
+            const user = data.user;
+            const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+
+            authNav.innerHTML = `
+              <a href="./search.html" class="nav-search-link" title="Search Properties">
+                <i class="fas fa-search"></i>
+              </a>
+              <a href="./profile.html" class="user-badge">
+                <span class="user-avatar">${initials}</span>
+                ${user.name.split(' ')[0]}
+              </a>
+              <button onclick="localStorage.removeItem('token'); localStorage.removeItem('user'); window.location.reload();" 
+                      class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+              </button>
+            `;
+
+            if (user.role === 'owner' && ownerTools) {
+              ownerTools.style.display = 'block';
+            }
+            if (user.role === 'admin' && adminTools) {
+              adminTools.style.display = 'block';
+            }
+          }
+        })
+        .catch(() => {});
+      }
+    })();
+    </script>
 </body>
 
 </html>
-
-

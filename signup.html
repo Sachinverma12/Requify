@@ -69,28 +69,121 @@
     </section>
   </main>
 
+  <script src="config.js"></script>
+  <script src="motion.js"></script>
   <script src="./auth.js"></script>
   <script>
     const signupForm = document.getElementById('signupForm');
 
+    function validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
+    }
+
+    function validatePassword(password) {
+      return password && password.length >= 8;
+    }
+
+    function validateName(name) {
+      return name && name.trim().length >= 2;
+    }
+
+    function showFieldError(fieldId, message) {
+      const field = document.getElementById(fieldId);
+      if (!field) return;
+      
+      field.style.borderColor = '#ef4444';
+      
+      let error = field.parentElement.querySelector('.field-error');
+      if (!error) {
+        error = document.createElement('div');
+        error.className = 'field-error';
+        error.style.color = '#ef4444';
+        error.style.fontSize = '0.85rem';
+        error.style.marginTop = '0.25rem';
+        field.parentElement.appendChild(error);
+      }
+      error.textContent = message;
+    }
+
+    function clearFieldError(fieldId) {
+      const field = document.getElementById(fieldId);
+      if (!field) return;
+      field.style.borderColor = '#e9ecef';
+      const error = field.parentElement.querySelector('.field-error');
+      if (error) error.remove();
+    }
+
     signupForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const role = document.querySelector('input[name="role"]:checked')?.value;
-      const name = document.getElementById('signupName').value;
-      const email = document.getElementById('signupEmail').value;
+      const name = document.getElementById('signupName').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
       const password = document.getElementById('signupPassword').value;
+
+      clearFieldError('signupName');
+      clearFieldError('signupEmail');
+      clearFieldError('signupPassword');
+
+      let isValid = true;
+
+      if (!name) {
+        showFieldError('signupName', 'Name is required');
+        isValid = false;
+      } else if (!validateName(name)) {
+        showFieldError('signupName', 'Name must be at least 2 characters');
+        isValid = false;
+      }
+
+      if (!email) {
+        showFieldError('signupEmail', 'Email is required');
+        isValid = false;
+      } else if (!validateEmail(email)) {
+        showFieldError('signupEmail', 'Please enter a valid email');
+        isValid = false;
+      }
+
+      if (!password) {
+        showFieldError('signupPassword', 'Password is required');
+        isValid = false;
+      } else if (!validatePassword(password)) {
+        showFieldError('signupPassword', 'Password must be at least 8 characters');
+        isValid = false;
+      }
+
+      if (!isValid) return;
 
       try {
         renderToast('Creating account...', false);
-        const data = await apiPost('http://localhost:5000/api/auth/signup', { name, email, password, role });
-        setSession(data.token);
-        window.location.href = role === 'owner'
-          ? './owner-dashboard.html'
-          : role === 'admin'
-            ? './admin-dashboard.html'
-            : './user-dashboard.html';
+        const data = await apiPost('/api/auth/signup', { name, email, password, role });
+        setSession(data.token, data.user);
+        showToast('Account created successfully!', 'success');
+        setTimeout(() => {
+          window.location.href = './index.html';
+        }, 500);
       } catch (err) {
         renderToast(err.message, true);
+      }
+    });
+
+    document.getElementById('signupName').addEventListener('blur', function() {
+      clearFieldError('signupName');
+      if (this.value && !validateName(this.value)) {
+        showFieldError('signupName', 'Name must be at least 2 characters');
+      }
+    });
+
+    document.getElementById('signupEmail').addEventListener('blur', function() {
+      clearFieldError('signupEmail');
+      if (this.value && !validateEmail(this.value)) {
+        showFieldError('signupEmail', 'Please enter a valid email');
+      }
+    });
+
+    document.getElementById('signupPassword').addEventListener('blur', function() {
+      clearFieldError('signupPassword');
+      if (this.value && !validatePassword(this.value)) {
+        showFieldError('signupPassword', 'Password must be at least 8 characters');
       }
     });
   </script>

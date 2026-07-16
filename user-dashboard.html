@@ -89,6 +89,8 @@
     </section>
   </main>
 
+  <script src="config.js"></script>
+  <script src="motion.js"></script>
   <script src="./auth.js"></script>
   <script>
     const logoutBtn = document.getElementById('logoutBtnTop');
@@ -144,8 +146,9 @@
 
     async function loadProperties(search = '') {
       const token = getSessionToken();
-      const url = `http://localhost:5000/api/properties${search ? `?search=${encodeURIComponent(search)}` : ''}`;
-      const res = await apiGet(url, token);
+      const endpoint = window.API_CONFIG?.ENDPOINTS?.PROPERTIES?.SEARCH || '/api/properties';
+      const query = search ? `?search=${encodeURIComponent(search)}` : '';
+      const res = await apiGet(endpoint + query, token);
       renderProperties(res.properties || []);
     }
 
@@ -154,10 +157,10 @@
       if (!token) return window.location.href = './login.html';
 
       try {
-        const me = await apiGet('http://localhost:5000/api/auth/me', token);
+        const me = await apiGet('/api/auth/me', token);
         document.getElementById('userName').textContent = me.user.name;
 
-        const protectedData = await apiGet('http://localhost:5000/api/protected/user', token);
+        const protectedData = await apiGet('/api/protected/user', token);
         document.getElementById('protectedResult').textContent = protectedData.message;
 
         await loadProperties('');

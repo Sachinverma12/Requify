@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile - Requify</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <style>
+    .profile-section { padding: 2rem 0; }
+    .profile-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .profile-header {
+      background: linear-gradient(135deg, #6d28d9, #0ea5e9);
+      padding: 3rem 2rem;
+      text-align: center;
+      color: white;
+    }
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      border: 4px solid white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      font-size: 3rem;
+    }
+    .profile-header h2 { margin: 0; font-size: 1.8rem; }
+    .profile-header .role-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      margin-top: 0.5rem;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+    .profile-body { padding: 2rem; }
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    @media (max-width: 768px) { .profile-grid { grid-template-columns: 1fr; } }
+    .profile-info-item {
+      padding: 1.25rem;
+      background: #f8fafc;
+      border-radius: 12px;
+      border: 1px solid #e9ecef;
+    }
+    .profile-info-item .label {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 0.25rem;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .profile-info-item .value {
+      font-size: 1.1rem;
+      color: #333;
+      font-weight: 600;
+    }
+    .profile-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+    .profile-action-card {
+      flex: 1;
+      min-width: 200px;
+      padding: 1.5rem;
+      background: #f8fafc;
+      border-radius: 12px;
+      text-align: center;
+      text-decoration: none;
+      color: #333;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+    .profile-action-card:hover {
+      border-color: #6d28d9;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(109,40,217,0.1);
+    }
+    .profile-action-card i {
+      font-size: 2rem;
+      color: #6d28d9;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+    .profile-action-card h4 { margin: 0 0 0.25rem; }
+    .profile-action-card p { margin: 0; color: #666; font-size: 0.9rem; }
+    .activity-list { margin-top: 1.5rem; }
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: #f8fafc;
+      border-radius: 10px;
+      margin-bottom: 0.75rem;
+    }
+    .activity-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f5f3ff;
+      color: #6d28d9;
+      flex-shrink: 0;
+    }
+    .activity-item .text { flex: 1; }
+    .activity-item .text strong { color: #333; }
+    .activity-item .time { color: #999; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <header id="header">
+    <nav class="container">
+      <a href="./index.html" class="logo" style="text-decoration:none;">Requify</a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="./index.html">Home</a></li>
+        <li><a href="./index.html#properties">Properties</a></li>
+        <li><a href="./index.html#About">About</a></li>
+        <li><a href="./index.html#Contact">Contact</a></li>
+      </ul>
+      <div style="display:flex; gap:12px; align-items:center;">
+        <button id="logoutBtnTop" class="cta-btn" style="border:none; cursor:pointer;">Logout</button>
+      </div>
+      <div class="mobile-menu-btn" id="mobileMenuBtn">
+        <span></span><span></span><span></span>
+      </div>
+    </nav>
+  </header>
+
+  <main style="padding-top: 8rem;">
+    <section class="profile-section">
+      <div class="container">
+        <div class="profile-card">
+          <div class="profile-header">
+            <div class="profile-avatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <h2 id="profileName">Loading...</h2>
+            <div class="role-badge" id="profileRole">user</div>
+          </div>
+          <div class="profile-body">
+            <div class="profile-grid">
+              <div class="profile-info-item">
+                <div class="label"><i class="fas fa-envelope"></i> Email Address</div>
+                <div class="value" id="profileEmail">-</div>
+              </div>
+              <div class="profile-info-item">
+                <div class="label"><i class="fas fa-user-tag"></i> Account Type</div>
+                <div class="value" id="profileAccountType">-</div>
+              </div>
+              <div class="profile-info-item">
+                <div class="label"><i class="fas fa-calendar"></i> Member Since</div>
+                <div class="value" id="profileJoined">-</div>
+              </div>
+              <div class="profile-info-item">
+                <div class="label"><i class="fas fa-id-card"></i> User ID</div>
+                <div class="value" id="profileId" style="font-size:0.85rem; word-break:break-all;">-</div>
+              </div>
+            </div>
+
+            <div id="ownerStats" style="display:none; margin-top:1.5rem;">
+              <h3 style="color:#6d28d9; margin-bottom:1rem;"><i class="fas fa-chart-bar"></i> Your Property Stats</h3>
+              <div class="profile-grid">
+                <div class="profile-info-item">
+                  <div class="label">Total Listings</div>
+                  <div class="value" id="totalListings">0</div>
+                </div>
+                <div class="profile-info-item">
+                  <div class="label">Last Updated</div>
+                  <div class="value" id="lastUpdated">-</div>
+                </div>
+              </div>
+            </div>
+
+            <h3 style="color:#6d28d9; margin-top:2rem; margin-bottom:1rem;"><i class="fas fa-bolt"></i> Quick Actions</h3>
+            <div class="profile-actions" id="profileActions">
+            </div>
+
+            <h3 style="color:#6d28d9; margin-top:2rem; margin-bottom:1rem;"><i class="fas fa-history"></i> Recent Activity</h3>
+            <div class="activity-list" id="activityList">
+              <div class="activity-item">
+                <div class="activity-icon"><i class="fas fa-sign-in-alt"></i></div>
+                <div class="text"><strong>Logged in</strong> - Welcome back!</div>
+                <div class="time">Just now</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align:center; margin-top:1.5rem;">
+          <a href="./index.html" class="ghost-btn" style="text-decoration:none; display:inline-block;">
+            <i class="fas fa-arrow-left"></i> Back to Home
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2024 Requify. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="motion.js"></script>
+  <script src="./auth.js"></script>
+  <script>
+    const logoutBtn = document.getElementById('logoutBtnTop');
+    logoutBtn.addEventListener('click', () => {
+      clearSession();
+      window.location.href = './login.html';
+    });
+
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+    const navLinks = document.getElementById("navLinks");
+    if (mobileMenuBtn && navLinks) {
+      mobileMenuBtn.addEventListener("click", () => {
+        navLinks.classList.toggle("active");
+      });
+    }
+
+    function getInitials(name) {
+      return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '-';
+      return new Date(dateStr).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
+    (async () => {
+      const token = getSessionToken();
+      if (!token) return window.location.href = './login.html';
+
+      try {
+        const me = await apiGet('/api/auth/me', token);
+        const user = me.user;
+
+        document.getElementById('profileName').textContent = user.name;
+        document.getElementById('profileEmail').textContent = user.email;
+        document.getElementById('profileRole').textContent = user.role;
+        document.getElementById('profileAccountType').textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+        document.getElementById('profileId').textContent = user.id;
+
+        document.querySelector('.profile-avatar').innerHTML = `<span style="font-size:2.5rem; font-weight:800;">${getInitials(user.name)}</span>`;
+
+        const actionsContainer = document.getElementById('profileActions');
+
+        const commonActions = `
+          <a href="./index.html" class="profile-action-card">
+            <i class="fas fa-home"></i>
+            <h4>Home</h4>
+            <p>Go to homepage</p>
+          </a>
+          <a href="./index.html#properties" class="profile-action-card">
+            <i class="fas fa-search"></i>
+            <h4>Search Properties</h4>
+            <p>Find your dream home</p>
+          </a>
+        `;
+
+        if (user.role === 'user') {
+          actionsContainer.innerHTML = commonActions + `
+            <a href="./index.html#About" class="profile-action-card">
+              <i class="fas fa-info-circle"></i>
+              <h4>About Us</h4>
+              <p>Learn about Requify</p>
+            </a>
+          `;
+        } else if (user.role === 'owner') {
+          document.getElementById('ownerStats').style.display = 'block';
+          document.getElementById('profileActions').innerHTML = `
+            <a href="./owner-dashboard.html" class="profile-action-card">
+              <i class="fas fa-plus-circle"></i>
+              <h4>Add Property</h4>
+              <p>List a new property</p>
+            </a>
+            <a href="./owner-dashboard.html" class="profile-action-card">
+              <i class="fas fa-edit"></i>
+              <h4>Manage Listings</h4>
+              <p>Edit your properties</p>
+            </a>
+            <a href="./index.html#properties" class="profile-action-card">
+              <i class="fas fa-eye"></i>
+              <h4>View All Properties</h4>
+              <p>See all listings</p>
+            </a>
+          `;
+
+          try {
+            const propsRes = await apiGet('/api/owner/properties', token);
+            const props = propsRes.properties || [];
+            document.getElementById('totalListings').textContent = props.length;
+            if (props.length > 0) {
+              const latest = props.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))[0];
+              document.getElementById('lastUpdated').textContent = formatDate(latest.updatedAt);
+            }
+          } catch (e) {}
+        } else if (user.role === 'admin') {
+          document.getElementById('profileActions').innerHTML = `
+            <a href="./admin-dashboard.html" class="profile-action-card">
+              <i class="fas fa-users-cog"></i>
+              <h4>Manage Users</h4>
+              <p>View all users</p>
+            </a>
+            <a href="./admin-dashboard.html" class="profile-action-card">
+              <i class="fas fa-building"></i>
+              <h4>All Properties</h4>
+              <p>Moderate listings</p>
+            </a>
+            <a href="./index.html#properties" class="profile-action-card">
+              <i class="fas fa-eye"></i>
+              <h4>View Site</h4>
+              <p>See public listings</p>
+            </a>
+          `;
+
+          try {
+            const usersRes = await apiGet('/api/admin/users', token);
+            const propsRes = await apiGet('/api/admin/properties', token);
+            const activityList = document.getElementById('activityList');
+            const users = usersRes.users || [];
+            const props = propsRes.properties || [];
+            activityList.innerHTML = `
+              <div class="activity-item">
+                <div class="activity-icon"><i class="fas fa-users"></i></div>
+                <div class="text"><strong>${users.length} users</strong> registered on platform</div>
+                <div class="time">Total</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon"><i class="fas fa-building"></i></div>
+                <div class="text"><strong>${props.length} properties</strong> listed on platform</div>
+                <div class="time">Total</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon"><i class="fas fa-sign-in-alt"></i></div>
+                <div class="text"><strong>Logged in</strong> - Admin session active</div>
+                <div class="time">Just now</div>
+              </div>
+            `;
+          } catch (e) {}
+        }
+      } catch (e) {
+        clearSession();
+        window.location.href = './login.html';
+      }
+    })();
+  </script>
+</body>
+</html>

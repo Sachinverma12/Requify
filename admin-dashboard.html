@@ -136,6 +136,8 @@
     </section>
   </main>
 
+  <script src="config.js"></script>
+  <script src="motion.js"></script>
   <script src="./auth.js"></script>
   <script>
     const logoutBtn = document.getElementById('logoutBtnTop');
@@ -207,7 +209,7 @@
 
     async function loadUsers() {
       const token = getSessionToken();
-      const res = await apiGet('http://localhost:5000/api/admin/users', token);
+      const res = await apiGet('/api/admin/users', token);
       const list = res.users || [];
 
       userCount.textContent = `${list.length} users`;
@@ -232,7 +234,7 @@
 
     async function loadProperties() {
       const token = getSessionToken();
-      const res = await apiGet('http://localhost:5000/api/admin/properties', token);
+      const res = await apiGet('/api/admin/properties', token);
       const list = res.properties || [];
 
       propertiesCount.textContent = `${list.length} properties`;
@@ -267,14 +269,7 @@
         card.querySelector('[data-action="delete"]').addEventListener('click', async () => {
           if (!confirm('Delete this property?')) return;
           const token = getSessionToken();
-          await fetch('http://localhost:5000/api/admin/properties/' + p.id, {
-            method: 'DELETE',
-            headers: { Authorization: `Bearer ${token}` },
-          }).then((r) => r.json().catch(() => ({}))).then((data) => {
-            if (!data || data.message) {
-              // no-op
-            }
-          });
+          await apiDelete('/api/admin/properties/' + p.id, token);
           resetForm();
           await loadProperties();
         });
@@ -287,21 +282,14 @@
       e.preventDefault();
       const token = getSessionToken();
       const id = editingId.value;
-      if (!id) return alert('Select a property to edit (click Edit on a card).');
+      if (!id) return showToast('Select a property to edit (click Edit on a card).', 'warning');
 
       try {
-        await fetch('http://localhost:5000/api/admin/properties/' + id, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(getPayload()),
-        });
+        await apiPut('/api/admin/properties/' + id, getPayload(), token);
         resetForm();
         await loadProperties();
       } catch (err) {
-        alert(err.message);
+        showToast(err.message, 'error');
       }
     });
 
@@ -310,10 +298,10 @@
       if (!token) return window.location.href = './login.html';
 
       try {
-        const me = await apiGet('http://localhost:5000/api/auth/me', token);
+        const me = await apiGet('/api/auth/me', token);
         document.getElementById('userName').textContent = me.user.name;
 
-        const protectedData = await apiGet('http://localhost:5000/api/protected/admin', token);
+        const protectedData = await apiGet('/api/protected/admin', token);
         protectedResult.textContent = protectedData.message;
 
         await loadUsers();

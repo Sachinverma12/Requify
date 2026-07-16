@@ -27,7 +27,8 @@
 
   async function apiGet(url) {
     const token = state.token || getToken();
-    const res = await fetch(url, {
+    const fullUrl = url.startsWith('http') ? url : (window.API_CONFIG?.BASE_URL || '') + url;
+    const res = await fetch(fullUrl, {
       method: 'GET',
       headers: token ? { Authorization: `Bearer ${token}` } : undefined,
     });
@@ -37,8 +38,6 @@
   }
 
   function renderCards(properties) {
-    // Success render always clears loading/error states handled by caller.
-
     const grid = document.getElementById('indexPropertiesGrid');
     const empty = document.getElementById('indexPropertiesEmpty');
     const count = document.getElementById('indexPropertiesCount');
@@ -49,105 +48,193 @@
     empty.style.display = list.length ? 'none' : 'block';
     grid.innerHTML = '';
 
+    // Reset prop-tab to "All" on new search
+    document.querySelectorAll('.prop-tab').forEach(t => t.classList.remove('active'));
+    const allTab = document.querySelector('.prop-tab[data-type="all"]');
+    if (allTab) allTab.classList.add('active');
+
+    if (window.setAllProperties && list.length > 0) {
+      window.setAllProperties(list);
+    }
+
     list.forEach((p) => {
       const imgUrl = p.imageUrl && p.imageUrl.trim().length
         ? p.imageUrl.trim()
         : 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80';
 
-      const priceBadge = p.price ? `$${escapeHtml(p.price)}` : '';
+      const priceBadge = p.price ? window.formatPrice ? window.formatPrice(p.price) : `$${escapeHtml(p.price)}` : '';
+      const isFav = window.isFavorite ? window.isFavorite(p.id) : false;
+      const category = (p.category || '').toLowerCase();
+      const saleOrRent = category.includes('rent') ? 'rent' : 'sale';
 
       const card = document.createElement('div');
-      card.className = 'property-card fade-in';
+      card.className = 'property-card-modern fade-in';
       card.style.cursor = 'pointer';
       card.innerHTML = `
-        <div class="property-image" style="background-image:url('${escapeHtml(imgUrl)}');">
-          ${priceBadge ? `<div class="property-price">${priceBadge}</div>` : ''}
+        <div class="p-image">
+          <img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(p.title)}" loading="lazy" />
+          <span class="p-badge ${saleOrRent}">${saleOrRent === 'rent' ? 'For Rent' : 'For Sale'}</span>
+          ${priceBadge ? `<span class="p-price-tag">${priceBadge}</span>` : ''}
+          <div class="p-card-actions">
+            <button class="p-fav ${isFav ? 'active' : ''}" data-id="${escapeHtml(p.id)}" title="Add to favorites">
+              <i class="fas fa-heart"></i>
+            </button>
+            <button class="p-compare" data-property='${JSON.stringify(p).replace(/'/g, "&#39;")}' title="Add to compare">
+              <i class="fas fa-balance-scale"></i>
+            </button>
+          </div>
         </div>
-        <div class="property-info">
-          <h3 class="property-title">${escapeHtml(p.title)}</h3>
-          <div class="property-location"><i class="fas fa-map-marker-alt"></i><span>${escapeHtml(p.location || '')}</span></div>
-          <div class="property-features">
-            <div class="property-feature"><i class="fas fa-bed"></i><span>${escapeHtml(p.category || 'Property')}</span></div>
+        <div class="p-card-body">
+          <h3 class="p-card-title">${escapeHtml(p.title)}</h3>
+          <div class="p-card-location"><i class="fas fa-map-marker-alt"></i><span>${escapeHtml(p.location || '')}</span></div>
+          <div class="p-card-features">
+            <div class="p-card-feature"><i class="fas fa-tag"></i><span>${escapeHtml(p.category || 'Property')}</span></div>
+            ${p.bedrooms ? `<div class="p-card-feature"><i class="fas fa-bed"></i><span>${escapeHtml(p.bedrooms)} BHK</span></div>` : ''}
+            ${p.area ? `<div class="p-card-feature"><i class="fas fa-ruler-combined"></i><span>${escapeHtml(p.area)} sqft</span></div>` : ''}
+            ${p.bathrooms ? `<div class="p-card-feature"><i class="fas fa-bath"></i><span>${escapeHtml(p.bathrooms)} Bath</span></div>` : ''}
           </div>
         </div>
       `;
 
+      card.querySelector('.p-fav').addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (window.toggleFavorite) {
+          const added = window.toggleFavorite(p.id);
+          e.currentTarget.classList.toggle('active', added);
+          if (window.showToast) {
+            window.showToast(added ? 'Added to favorites' : 'Removed from favorites', 'success');
+          }
+        }
+      });
+
+      const compareBtn = card.querySelector('.p-compare');
+      if (compareBtn) {
+        compareBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          try {
+            const propertyData = JSON.parse(e.currentTarget.getAttribute('data-property'));
+            if (window.addToCompare) {
+              window.addToCompare(propertyData);
+            }
+          } catch (err) {}
+        });
+      }
+
       card.addEventListener('click', () => {
-        const title = safeText(p.title);
-        const location = safeText(p.location);
-        const price = p.price ? safeText(p.price) : 'N/A';
-        alert(`Property Details:\n\nTitle: ${title}\nPrice: ${price}\nLocation: ${location}\n\n(Connect owner/admin dashboard to manage listings.)`);
+        if (window.showPropertyModal) {
+          window.showPropertyModal(p);
+        } else {
+          const title = safeText(p.title);
+          const location = safeText(p.location);
+          const price = p.price ? safeText(p.price) : 'N/A';
+          alert(`Property Details:\n\nTitle: ${title}\nPrice: ${price}\nLocation: ${location}\n\n(Connect owner/admin dashboard to manage listings.)`);
+        }
       });
 
       grid.appendChild(card);
     });
   }
 
-  async function loadProperties(search = '') {
-    const searchInput = document.getElementById('indexSearchInput');
-    const searchBtn = document.getElementById('indexSearchBtn');
-    const clearBtn = document.getElementById('indexSearchClear');
+  function collectFilters() {
+    const f = {};
+    const searchVal = (document.getElementById('indexSearchInput') || document.getElementById('indexSearchInput2') || {}).value;
+    if (searchVal && searchVal.trim()) f.search = searchVal.trim();
+
+    const loc = document.getElementById('filterLocation');
+    if (loc && loc.value) f.location = loc.value;
+
+    const type = document.getElementById('filterType');
+    if (type && type.value) f.type = type.value;
+
+    const cat = document.getElementById('filterCategory');
+    if (cat && cat.value) f.category = cat.value;
+
+    const pMin = document.getElementById('filterPriceMin');
+    if (pMin && pMin.value) f.priceMin = pMin.value;
+
+    const pMax = document.getElementById('filterPriceMax');
+    if (pMax && pMax.value) f.priceMax = pMax.value;
+
+    const bed = document.getElementById('filterBedrooms');
+    if (bed && bed.value) f.bedrooms = bed.value;
+
+    const bath = document.getElementById('filterBathrooms');
+    if (bath && bath.value) f.bathrooms = bath.value;
+
+    return f;
+  }
+
+  function collectHeroFilters() {
+    const f = {};
+    const searchVal = (document.getElementById('indexSearchInput') || document.getElementById('indexSearchInput2') || {}).value;
+    if (searchVal && searchVal.trim()) f.search = searchVal.trim();
+
+    const typeHero = document.getElementById('filterTypeHero');
+    if (typeHero && typeHero.value) f.type = typeHero.value;
+
+    const budgetHero = document.getElementById('filterBudgetHero');
+    if (budgetHero && budgetHero.value) {
+      if (budgetHero.value === '100000000') {
+        f.priceMin = budgetHero.value;
+      } else {
+        f.priceMax = budgetHero.value;
+      }
+    }
+
+    return f;
+  }
+
+  async function loadProperties(filters) {
     const empty = document.getElementById('indexPropertiesEmpty');
     const errEl = document.getElementById('indexPropertiesError');
     const grid = document.getElementById('indexPropertiesGrid');
-
-    if (searchBtn) searchBtn.disabled = true;
-    if (clearBtn) clearBtn.disabled = true;
-
-    if (searchBtn) searchBtn.textContent = 'Searching...';
+    const count = document.getElementById('indexPropertiesCount');
 
     if (errEl) errEl.style.display = 'none';
     if (empty) empty.style.display = 'none';
-    if (grid) grid.style.opacity = '0.6';
+    
+    if (grid) {
+      grid.innerHTML = '';
+      for (let i = 0; i < 3; i++) {
+        const sk = document.createElement('div');
+        sk.className = 'skeleton-enhanced';
+        sk.style.cssText = 'height:380px; border-radius:16px; margin-bottom:0;';
+        grid.appendChild(sk);
+      }
+    }
 
     try {
-      const query = search ? `?search=${encodeURIComponent(search)}` : '';
-      const data = await apiGet(`http://localhost:5000/api/properties${query}`);
+      const params = new URLSearchParams();
+      if (!filters) filters = {};
+      if (filters.search) params.set('search', filters.search);
+      if (filters.type && filters.type !== 'all') params.set('type', filters.type);
+      if (filters.location) params.set('location', filters.location);
+      if (filters.category) params.set('category', filters.category);
+      if (filters.priceMin) params.set('priceMin', filters.priceMin);
+      if (filters.priceMax) params.set('priceMax', filters.priceMax);
+      if (filters.bedrooms) params.set('bedrooms', filters.bedrooms);
+      if (filters.bathrooms) params.set('bathrooms', filters.bathrooms);
+      const qs = params.toString();
+      const query = qs ? `?${qs}` : '';
+      const data = await apiGet(`${window.API_CONFIG?.ENDPOINTS?.PROPERTIES?.SEARCH || '/api/properties'}${query}`);
       renderCards(data.properties || []);
 
-
-    // Scroll + highlight after every successful request (including empty results)
-    const propertiesSection = document.getElementById('properties');
-    if (propertiesSection) {
-      propertiesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      // slight delay so user sees the cards first
-      setTimeout(() => {
-        const g = document.getElementById('indexPropertiesGrid');
-        if (g) {
-          g.classList.remove('search-highlight');
-          // force reflow
-          void g.offsetWidth;
-          g.classList.add('search-highlight');
-          setTimeout(() => g.classList.remove('search-highlight'), 1200);
-        }
-      }, 200);
+      const propertiesSection = document.getElementById('properties');
+      if (propertiesSection) {
+        propertiesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    } catch (e) {
+      if (errEl) {
+        errEl.textContent = e?.message || 'Search failed. Please try again.';
+        errEl.style.display = 'block';
+      }
+      if (grid) grid.innerHTML = '';
+      if (empty) {
+        empty.textContent = 'No properties found.';
+        empty.style.display = 'block';
+      }
+      if (count) count.textContent = '0 properties';
     }
-  } catch (e) {
-    const errEl2 = document.getElementById('indexPropertiesError');
-    const message = e && e.message ? e.message : 'Search failed. Please try again.';
-    if (errEl2) {
-      errEl2.textContent = message;
-      errEl2.style.display = 'block';
-    }
-    const grid2 = document.getElementById('indexPropertiesGrid');
-    const empty2 = document.getElementById('indexPropertiesEmpty');
-    if (grid2) grid2.innerHTML = '';
-    if (empty2) {
-      empty2.textContent = 'No properties found.';
-      empty2.style.display = 'block';
-    }
-  } finally {
-    const searchBtn2 = document.getElementById('indexSearchBtn');
-    const clearBtn2 = document.getElementById('indexSearchClear');
-    const grid3 = document.getElementById('indexPropertiesGrid');
-
-    if (searchBtn2) {
-      searchBtn2.disabled = false;
-      searchBtn2.textContent = 'Search';
-    }
-    if (clearBtn2) clearBtn2.disabled = false;
-    if (grid3) grid3.style.opacity = '1';
-  }
   }
 
   function start() {
@@ -155,51 +242,128 @@
     state.token = token;
 
     const searchInput = document.getElementById('indexSearchInput');
+    const searchInput2 = document.getElementById('indexSearchInput2');
     const searchBtn = document.getElementById('indexSearchBtn');
     const clearBtn = document.getElementById('indexSearchClear');
+    const heroSearchBtn = document.getElementById('heroSearchBtn');
+    const authTip = document.getElementById('indexAuthTip');
 
-    if (!searchInput || !searchBtn || !clearBtn) return;
-
-    if (!token) {
-      // Logged-out visitor: do not call API.
-      const tip = document.getElementById('indexAuthTip');
-      if (tip) {
-        tip.innerHTML = `Please <a href="./login.html">login</a> to search real listings.`;
-      }
+    if (!token && authTip) {
+      authTip.style.display = 'block';
       return;
     }
 
-    // Initial load
-    loadProperties('');
+    if (authTip) authTip.style.display = 'none';
 
-    let last = '';
-    const run = async () => {
-      const q = (searchInput.value || '').trim();
-      if (q === last) return;
-      last = q;
-      await loadProperties(q);
-    };
+    const activeInput = searchInput || searchInput2;
+    if (!activeInput) {
+      loadProperties({});
+      return;
+    }
 
-    searchBtn.addEventListener('click', async () => {
-      await run();
-    });
+    loadProperties({});
 
-    clearBtn.addEventListener('click', async () => {
-      searchInput.value = '';
-      last = '';
-      await loadProperties('');
-    });
+    function syncInputs(source, target) {
+      if (!source || !target) return;
+      source.addEventListener('input', () => {
+        target.value = source.value;
+      });
+    }
+    syncInputs(searchInput, searchInput2);
+    syncInputs(searchInput2, searchInput);
 
-    searchInput.addEventListener('keydown', async (e) => {
-      if (e.key === 'Enter') await run();
-    });
+    // Wire hero search button
+    if (heroSearchBtn) {
+      heroSearchBtn.addEventListener('click', () => {
+        loadProperties(collectHeroFilters());
+      });
+    }
 
-    // Nice UX: debounce typing a little
+    // Wire advanced filter search button
+    if (searchBtn) {
+      searchBtn.addEventListener('click', () => {
+        loadProperties(collectFilters());
+      });
+    }
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        activeInput.value = '';
+        if (searchInput2) searchInput2.value = '';
+        document.querySelectorAll('.filter-body input, .filter-body select').forEach(el => el.value = '');
+        const heroType = document.getElementById('filterTypeHero');
+        if (heroType) heroType.value = '';
+        const heroBudget = document.getElementById('filterBudgetHero');
+        if (heroBudget) heroBudget.value = '';
+        loadProperties({});
+      });
+    }
+
+    // Enter in hero search → hero filters
+    if (searchInput) {
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          loadProperties(collectHeroFilters());
+        }
+      });
+    }
+
+    // Enter in secondary search → advanced filters
+    if (searchInput2) {
+      searchInput2.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          loadProperties(collectFilters());
+        }
+      });
+    }
+
+    // Debounced input — text only (ignore hero/advanced dropdowns while typing)
     let t = null;
-    searchInput.addEventListener('input', () => {
+    activeInput.addEventListener('input', () => {
       clearTimeout(t);
-      t = setTimeout(() => run().catch(() => {}), 400);
+      t = setTimeout(() => {
+        const val = activeInput.value.trim();
+        loadProperties(val ? { search: val } : {});
+      }, 400);
     });
+
+    // Wire search tabs
+    document.querySelectorAll('.search-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.search-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+
+    // Wire property type tabs
+    document.querySelectorAll('.prop-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.prop-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const type = tab.dataset.type;
+        const allCards = document.querySelectorAll('.property-card-modern');
+        allCards.forEach(card => {
+          if (type === 'all') {
+            card.style.display = '';
+          } else {
+            const tag = card.querySelector('.p-badge');
+            if (tag) {
+              card.style.display = tag.textContent.toLowerCase().includes(type) ? '' : 'none';
+            }
+          }
+        });
+      });
+    });
+
+    // Wire filter toggle
+    const filterToggle = document.getElementById('filterToggle');
+    const filterBody = document.getElementById('filterBody');
+    const filterArrow = document.querySelector('.filter-arrow');
+    if (filterToggle && filterBody) {
+      filterToggle.addEventListener('click', () => {
+        filterBody.classList.toggle('open');
+        if (filterArrow) filterArrow.classList.toggle('open');
+      });
+    }
   }
 
   if (document.readyState === 'loading') {
@@ -207,5 +371,8 @@
   } else {
     start();
   }
-})();
 
+  window.renderFilteredProperties = (properties) => {
+    renderCards(properties);
+  };
+})();
